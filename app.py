@@ -1,6 +1,7 @@
 import streamlit as st
 from usuario import cadastrar, obter
 from treino import gerar_treino
+from treino import exibir_treino
 from calculos import calcular_imc, calcular_tmb
 
 # Função para exibir o treino
