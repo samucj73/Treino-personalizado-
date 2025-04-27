@@ -100,9 +100,9 @@ def gerar_treino(usuario):
     treino += "\n---\n"
     treino += "_Recomendamos avaliação médica antes de iniciar atividades físicas._"
 
-    return treino)
+    return treino
 
 # Exibir treino
 def exibir_treino(usuario):
     treino = gerar_treino(usuario)
-    st.markdown(treino
+    st.markdown(treino)
