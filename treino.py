@@ -11,8 +11,6 @@ def gerar_treino(usuario):
     treino += f"- **Idade:** {idade} anos\n"
     treino += f"- **Peso:** {peso:.1f} kg\n"
     treino += f"- **Altura:** {altura:.2f} m\n"
-    treino += f"- **IMC:** {imc:.2f} ({status_imc})\n"
-    treino += f"- **TMB:** {tmb:.0f} kcal/dia\n"
     treino += f"- **Objetivo:** {objetivo.capitalize()}\n"
     treino += "---\n\n"
 
