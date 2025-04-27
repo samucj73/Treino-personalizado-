@@ -1,3 +1,5 @@
+import streamlit as st
+
 # Função para gerar treino
 def gerar_treino(usuario):
     idade = usuario[3]
@@ -40,55 +42,58 @@ def gerar_treino(usuario):
 
     treino += "## Treino Semanal\n"
 
-    treino += """
+    # Segunda-feira (Peito e Tríceps)
+    treino_segunda = f"""
 ### Segunda-feira (Peito e Tríceps)
-- Supino reto barra ({}x{}) - Banco + Barra
-- Supino inclinado halteres ({}x{}) - Banco + Halteres
-- Crucifixo reto ({}x{}) - Banco + Halteres
-- Crossover no cabo ({}x{}) - Cross Over
-- Tríceps testa ({}x{}) - Barra W
-- Tríceps corda ({}x{}) - Polia
-
+- Supino reto barra ({series}x{reps}) - Banco + Barra
+- Supino inclinado halteres ({series}x{reps}) - Banco + Halteres
+- Crucifixo reto ({series}x{reps}) - Banco + Halteres
+- Crossover no cabo ({series}x{reps}) - Cross Over
+- Tríceps testa ({series}x{reps}) - Barra W
+- Tríceps corda ({series}x{reps}) - Polia
+"""
+    
+    # Terça-feira (Costas e Bíceps)
+    treino_terca = f"""
 ### Terça-feira (Costas e Bíceps)
-- Puxada frente aberta ({}x{}) - Cross Over
-- Remada baixa ({}x{}) - Máquina Remada
-- Puxada frente neutra ({}x{}) - Cross Over
-- Remada unilateral ({}x{}) - Halteres
-- Rosca direta barra ({}x{}) - Barra Reta
-- Rosca alternada halteres ({}x{}) - Halteres
+- Puxada frente aberta ({series}x{reps}) - Cross Over
+- Remada baixa ({series}x{reps}) - Máquina Remada
+- Puxada frente neutra ({series}x{reps}) - Cross Over
+- Remada unilateral ({series}x{reps}) - Halteres
+- Rosca direta barra ({series}x{reps}) - Barra Reta
+- Rosca alternada halteres ({series}x{reps}) - Halteres
+"""
 
+    # Quarta-feira (Pernas e Abdômen)
+    treino_quarta = f"""
 ### Quarta-feira (Pernas e Abdômen)
-- Agachamento livre ({}x{}) - Barra
-- Leg press 45º ({}x{}) - Leg Press
-- Cadeira extensora ({}x{}) - Máquina
-- Mesa flexora ({}x{}) - Máquina
-- Stiff com halteres ({}x{}) - Halteres
-- Glúteo cabo ({}x{}) - Polia (principalmente para feminino)
+- Agachamento livre ({series}x{reps}) - Barra
+- Leg press 45º ({series}x{reps}) - Leg Press
+- Cadeira extensora ({series}x{reps}) - Máquina
+- Mesa flexora ({series}x{reps}) - Máquina
+- Stiff com halteres ({series}x{reps}) - Halteres
+- Glúteo cabo ({series}x{reps}) - Polia (principalmente para feminino)
 
 - Abdominal supra solo (3x20) - Peso corporal
 - Prancha isométrica (3x30s) - Colchonete
 - Abdominal oblíquo solo (3x20 cada lado) - Peso corporal
+"""
 
+    # Quinta-feira (Ombros e Trapézio)
+    treino_quinta = f"""
 ### Quinta-feira (Ombros e Trapézio)
-- Desenvolvimento militar ({}x{}) - Barra ou Halteres
-- Elevação lateral ({}x{}) - Halteres
-- Elevação frontal ({}x{}) - Halteres
-- Encolhimento de ombros ({}x{}) - Barra
-- Desenvolvimento Arnold ({}x{}) - Halteres
-- Crucifixo inverso máquina ({}x{}) - Máquina de deltoide posterior
+- Desenvolvimento militar ({series}x{reps}) - Barra ou Halteres
+- Elevação lateral ({series}x{reps}) - Halteres
+- Elevação frontal ({series}x{reps}) - Halteres
+- Encolhimento de ombros ({series}x{reps}) - Barra
+- Desenvolvimento Arnold ({series}x{reps}) - Halteres
+- Crucifixo inverso máquina ({series}x{reps}) - Máquina de deltoide posterior
+"""
 
-### Sexta-feira (Glúteos e Abdômen)
-""".format(
-        series, reps, series, reps, series, reps, series, reps, series, reps, series, reps,  # Segunda
-        series, reps, series, reps, series, reps, series, reps, series, reps, series, reps,  # Terça
-        series, reps, series, reps, series, reps, series, reps, series, reps, series, reps,  # Quarta (pernas)
-        series, reps, series, reps, series, reps,  # Quinta (ombros)
-        series, reps, series, reps, series, reps  # Quinta continuação
-    )
-
-    # Sexta-feira foco Glúteo + Abdômen
+    # Sexta-feira (Glúteos e Abdômen)
     if genero == "feminino":
-        treino += f"""
+        treino_sexta = f"""
+### Sexta-feira (Glúteos e Abdômen)
 - Agachamento sumô com halteres ({series}x{reps}) - Halteres
 - Elevação de quadril no banco ({series}x{reps}) - Banco + Peso
 - Afundo com halteres ({series}x{reps}) - Halteres
@@ -101,7 +106,8 @@ def gerar_treino(usuario):
 - Abdominal bicicleta (3x20) - Peso corporal
 """
     else:
-        treino += f"""
+        treino_sexta = f"""
+### Sexta-feira (Glúteos e Abdômen)
 - Agachamento frontal barra ({series}x{reps}) - Barra
 - Agachamento búlgaro halteres ({series}x{reps}) - Halteres
 - Levantamento terra ({series}x{reps}) - Barra
@@ -114,6 +120,8 @@ def gerar_treino(usuario):
 - Abdominal bicicleta (3x20) - Peso corporal
 """
 
+    treino += treino_segunda + treino_terca + treino_quarta + treino_quinta + treino_sexta
+
     treino += "\n---\n"
     treino += "_Recomendamos avaliação médica antes de iniciar atividades físicas._\n"
 
@@ -121,7 +129,34 @@ def gerar_treino(usuario):
 
     return treino
 
-# Exibir treino
+
+# Função para exibir treino no Streamlit com linhas e colunas
 def exibir_treino(usuario):
     treino = gerar_treino(usuario)
-    st.markdown(treino)
+
+    # Exibindo os dados físicos em colunas
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown(f"**Idade:** {usuario[3]} anos")
+        st.markdown(f"**Peso:** {usuario[4]:.1f} kg")
+        st.markdown(f"**Altura:** {usuario[5]:.2f} m")
+    
+    with col2:
+        st.markdown(f"**Gênero:** {usuario[6].capitalize()}")
+        st.markdown(f"**Objetivo:** {usuario[7].capitalize()}")
+        st.markdown(f"**Experiência:** {usuario[8].capitalize()}")
+
+    st.markdown("---")
+
+    # Dividindo o treino semanal por dia
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown(treino_segunda)
+        st.markdown(treino_quarta)
+        st.markdown(treino_sexta)
+
+    with col2:
+        st.markdown(treino_terca)
+        st.markdown(treino_quinta)
