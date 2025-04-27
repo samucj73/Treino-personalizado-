@@ -7,9 +7,6 @@ def gerar_treino(usuario):
     objetivo = usuario[7].lower()
     experiencia = usuario[8]
 
-    imc, status_imc = calcular_imc(peso, altura)
-    tmb = calcular_tmb(peso, altura, idade, genero)
-
     treino = f"## Dados Físicos\n"
     treino += f"- **Idade:** {idade} anos\n"
     treino += f"- **Peso:** {peso:.1f} kg\n"
