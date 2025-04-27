@@ -14,7 +14,19 @@ def gerar_treino(usuario):
     treino += f"- **Objetivo:** {objetivo.capitalize()}\n"
     treino += "---\n\n"
 
-    treino += "## Treino Semanal\n"
+    treino += "## Divisão Semanal\n"
+    treino += """
+- **Segunda-feira:** Treino A (Peito + Tríceps)
+- **Terça-feira:** Treino B (Costas + Bíceps)
+- **Quarta-feira:** Treino C (Pernas + Abdômen)
+- **Quinta-feira:** Treino D (Ombro + Trapézio)
+- **Sexta-feira:** Treino E (Cardio)
+- **Sábado:** (Opcional) Repetir Treino A ou treino funcional/alongamento
+- **Domingo:** Descanso
+"""
+
+    treino += "---\n\n"
+    treino += "## Treino Detalhado\n"
 
     if objetivo == "emagrecimento":
         cardio = "**Treino E (Cardio/Funcional)**\n- Corrida moderada (40 minutos)\n- Circuito funcional (30 minutos)\n"
@@ -27,88 +39,85 @@ def gerar_treino(usuario):
         series_reps = "(3x20-25)"
 
     # Treino A: Peito e Tríceps
-    treino += """
+    treino += f"""
 **Treino A (Peito e Tríceps)**
 
 **Peito:**
-- Supino reto com barra - Máquina/Banco {}
-- Supino inclinado com halteres - Halteres/Banco {}
-- Crossover no cabo - Crossover/Cabo {}
-- Crucifixo reto com halteres - Halteres/Banco {}
-- Flexão de braços no solo - Peso corporal {}
-- Supino declinado com barra - Máquina/Banco {}
+- Supino reto com barra - Máquina/Banco {series_reps}
+- Supino inclinado com halteres - Halteres/Banco {series_reps}
+- Crossover no cabo - Crossover/Cabo {series_reps}
+- Crucifixo reto com halteres - Halteres/Banco {series_reps}
+- Flexão de braços no solo - Peso corporal {series_reps}
+- Supino declinado com barra - Máquina/Banco {series_reps}
 
 **Tríceps:**
-- Tríceps testa com barra EZ - Barra/Anilha {}
-- Tríceps pulley com corda - Cabo {}
-- Tríceps francês unilateral - Halteres {}
-- Tríceps mergulho em banco - Peso corporal {}
-- Tríceps coice com halteres - Halteres {}
-- Tríceps banco máquina - Máquina {}
-""".format(series_reps, series_reps, series_reps, series_reps, series_reps, series_reps,
-           series_reps, series_reps, series_reps, series_reps, series_reps, series_reps)
+- Tríceps testa com barra EZ - Barra/Anilha {series_reps}
+- Tríceps pulley com corda - Cabo {series_reps}
+- Tríceps francês unilateral - Halteres {series_reps}
+- Tríceps mergulho em banco - Peso corporal {series_reps}
+- Tríceps coice com halteres - Halteres {series_reps}
+- Tríceps banco máquina - Máquina {series_reps}
+"""
 
     # Treino B: Costas e Bíceps
-    treino += """
+    treino += f"""
 **Treino B (Costas e Bíceps)**
 
 **Costas:**
-- Puxada frente aberta - Máquina/Cabo {}
-- Remada curvada com barra - Barra {}
-- Remada baixa - Máquina/Cabo {}
-- Remada unilateral com halteres - Halteres {}
-- Puxada neutra (pegada fechada) - Máquina/Cabo {}
-- Pullover na máquina - Máquina {}
+- Puxada frente aberta - Máquina/Cabo {series_reps}
+- Remada curvada com barra - Barra {series_reps}
+- Remada baixa - Máquina/Cabo {series_reps}
+- Remada unilateral com halteres - Halteres {series_reps}
+- Puxada neutra (pegada fechada) - Máquina/Cabo {series_reps}
+- Pullover na máquina - Máquina {series_reps}
 
 **Bíceps:**
-- Rosca direta barra EZ - Barra {}
-- Rosca alternada - Halteres {}
-- Rosca concentrada - Halteres {}
-- Rosca martelo - Halteres {}
-- Rosca scott máquina - Máquina {}
-- Rosca inversa com barra - Barra {}
-""".format(series_reps, series_reps, series_reps, series_reps, series_reps, series_reps,
-           series_reps, series_reps, series_reps, series_reps, series_reps, series_reps)
+- Rosca direta barra EZ - Barra {series_reps}
+- Rosca alternada - Halteres {series_reps}
+- Rosca concentrada - Halteres {series_reps}
+- Rosca martelo - Halteres {series_reps}
+- Rosca scott máquina - Máquina {series_reps}
+- Rosca inversa com barra - Barra {series_reps}
+"""
 
     # Treino C: Pernas + Abdômen
-    treino += """
+    treino += f"""
 **Treino C (Pernas e Abdômen)**
 
 **Pernas (Quadríceps, Posterior, Glúteo):**
-- Agachamento livre - Barra {}
-- Leg press 45° - Máquina {}
-- Cadeira extensora - Máquina {}
-- Mesa flexora - Máquina {}
-- Stiff com halteres - Halteres {}
-- Avanço (passada) com halteres - Halteres {}
+- Agachamento livre - Barra {series_reps}
+- Leg press 45° - Máquina {series_reps}
+- Cadeira extensora - Máquina {series_reps}
+- Mesa flexora - Máquina {series_reps}
+- Stiff com halteres - Halteres {series_reps}
+- Avanço (passada) com halteres - Halteres {series_reps}
 
 **Abdômen:**
 - Prancha isométrica - Peso corporal (3x30s)
 - Abdominal supra solo - Peso corporal (3x30)
 - Abdominal oblíquo com halteres - Halteres (3x20)
-""".format(series_reps, series_reps, series_reps, series_reps, series_reps, series_reps)
+"""
 
     # Treino D: Ombro e Trapézio
-    treino += """
+    treino += f"""
 **Treino D (Ombro e Trapézio)**
 
 **Ombro:**
-- Desenvolvimento militar com barra - Barra {}
-- Desenvolvimento com halteres - Halteres {}
-- Elevação lateral com halteres - Halteres {}
-- Elevação frontal com halteres - Halteres {}
-- Crucifixo inverso no peck deck - Máquina {}
-- Remada alta com barra - Barra {}
+- Desenvolvimento militar com barra - Barra {series_reps}
+- Desenvolvimento com halteres - Halteres {series_reps}
+- Elevação lateral com halteres - Halteres {series_reps}
+- Elevação frontal com halteres - Halteres {series_reps}
+- Crucifixo inverso no peck deck - Máquina {series_reps}
+- Remada alta com barra - Barra {series_reps}
 
 **Trapézio:**
-- Encolhimento de ombros com halteres - Halteres {}
-- Encolhimento com barra - Barra {}
-- Remada alta pegada fechada - Barra {}
-- Trapézio máquina - Máquina {}
-- Remada alta no cross-over - Cabo {}
-- Shrug no smith - Máquina Smith {}
-""".format(series_reps, series_reps, series_reps, series_reps, series_reps, series_reps,
-           series_reps, series_reps, series_reps, series_reps, series_reps, series_reps)
+- Encolhimento de ombros com halteres - Halteres {series_reps}
+- Encolhimento com barra - Barra {series_reps}
+- Remada alta pegada fechada - Barra {series_reps}
+- Trapézio máquina - Máquina {series_reps}
+- Remada alta no cross-over - Cabo {series_reps}
+- Shrug no smith - Máquina Smith {series_reps}
+"""
 
     treino += "\n" + cardio
     treino += "\n---\n"
