@@ -11,47 +11,6 @@ from calculos import (
     recomendacao_proteina
 )
 
-# Função para exibir o treino
-def exibir_treino(usuario):
-    treino = gerar_treino(usuario)
-    st.markdown(treino)
-
-    idade = usuario[3]
-    peso = usuario[4]
-    altura = usuario[5]
-    genero = usuario[6]
-    objetivo = usuario[7]
-
-    circunferencia_cintura = 85  # Valor fixo temporário
-
-    st.subheader("Resumo de Saúde")
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        imc, faixa_imc = calcular_imc(peso, altura)
-        st.metric("IMC", f"{imc:.2f}", faixa_imc)
-
-    with col2:
-        tmb = calcular_tmb(idade, peso, altura, genero)
-        st.metric("TMB", f"{tmb:.0f} kcal/dia")
-
-    with st.expander("Análise Avançada de Saúde e Recomendações"):
-        percentual_gordura = calcular_percentual_gordura(peso, circunferencia_cintura, idade, genero)
-        massa_muscular = calcular_massa_muscular(peso, percentual_gordura)
-        idade_metabolica = calcular_idade_metabolica(tmb, idade)
-        agua_necessaria = recomendacao_hidratacao(peso)
-        proteina_necessaria = recomendacao_proteina(peso, objetivo)
-
-        st.write(f"**Percentual de Gordura Corporal Estimado:** {percentual_gordura:.2f}%")
-        st.write(f"**Massa Muscular Estimada:** {massa_muscular:.2f} kg")
-        st.write(f"**Idade Metabólica Estimada:** {idade_metabolica:.1f} anos")
-        st.write(f"**Ingestão Recomendada de Água:** {agua_necessaria:.0f} ml/dia")
-        st.write(f"**Ingestão Recomendada de Proteína:** {proteina_necessaria:.0f} g/dia")
-
-    if st.button("Exportar treino para PDF (em breve)"):
-        st.info("Função de exportação em PDF ainda não implementada.")
-
 # Função para criar perfil rápido (se o usuário logar sem dados completos)
 def preencher_dados_usuario():
     st.subheader("Complete seu Perfil de Treino")
