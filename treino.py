@@ -1,6 +1,5 @@
 import streamlit as st
-# Função para gerar treino
-import streamlit as st
+import time
 
 # Função para gerar treino
 def gerar_treino(usuario):
@@ -56,8 +55,9 @@ def gerar_treino(usuario):
             ("Tríceps testa", series, reps),
             ("Tríceps corda", series, reps)
         ]
-        st.write("### Exercícios:")
-        st.table(treino_segunda)
+        for exercicio in treino_segunda:
+            if st.checkbox(f"Realizado: {exercicio[0]} ({exercicio[1]}x{exercicio[2]})"):
+                st.progress(100)
 
     # Terça-feira
     with st.expander("Terça-feira (Costas e Bíceps)"):
@@ -69,8 +69,9 @@ def gerar_treino(usuario):
             ("Rosca direta barra", series, reps),
             ("Rosca alternada halteres", series, reps)
         ]
-        st.write("### Exercícios:")
-        st.table(treino_terca)
+        for exercicio in treino_terca:
+            if st.checkbox(f"Realizado: {exercicio[0]} ({exercicio[1]}x{exercicio[2]})"):
+                st.progress(100)
 
     # Quarta-feira
     with st.expander("Quarta-feira (Pernas e Abdômen)"):
@@ -85,8 +86,9 @@ def gerar_treino(usuario):
             ("Prancha isométrica", "3", "30s"),
             ("Abdominal oblíquo solo", "3", "20 cada lado")
         ]
-        st.write("### Exercícios:")
-        st.table(treino_quarta)
+        for exercicio in treino_quarta:
+            if st.checkbox(f"Realizado: {exercicio[0]} ({exercicio[1]}x{exercicio[2]})"):
+                st.progress(100)
 
     # Quinta-feira
     with st.expander("Quinta-feira (Ombros e Trapézio)"):
@@ -98,8 +100,9 @@ def gerar_treino(usuario):
             ("Desenvolvimento Arnold", series, reps),
             ("Crucifixo inverso máquina", series, reps)
         ]
-        st.write("### Exercícios:")
-        st.table(treino_quinta)
+        for exercicio in treino_quinta:
+            if st.checkbox(f"Realizado: {exercicio[0]} ({exercicio[1]}x{exercicio[2]})"):
+                st.progress(100)
 
     # Sexta-feira
     with st.expander("Sexta-feira (Glúteos e Abdômen)"):
@@ -127,8 +130,17 @@ def gerar_treino(usuario):
                 ("Prancha lateral", "3", "30s"),
                 ("Abdominal infra no banco", "3", "20")
             ]
-        st.write("### Exercícios:")
-        st.table(treino_sexta)
+        for exercicio in treino_sexta:
+            if st.checkbox(f"Realizado: {exercicio[0]} ({exercicio[1]}x{exercicio[2]})"):
+                st.progress(100)
+
+    # Temporizador de descanso
+    st.write("### Temporizador de descanso entre os exercícios")
+    tempo_descanso = st.number_input("Digite o tempo de descanso (em segundos):", min_value=1, max_value=300, value=60)
+    if st.button("Iniciar descanso"):
+        st.write(f"Descansando por {tempo_descanso} segundos...")
+        time.sleep(tempo_descanso)
+        st.success(f"Descanso de {tempo_descanso} segundos finalizado!")
 
     # Fim do treino
     treino += "---\n"
