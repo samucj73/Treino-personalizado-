@@ -16,15 +16,13 @@ def exibir_treino(usuario):
     treino = gerar_treino(usuario)
     st.markdown(treino)
 
-    # Extrair dados do usuário
     idade = usuario[3]
     peso = usuario[4]
     altura = usuario[5]
     genero = usuario[6]
     objetivo = usuario[7]
-    
-    # Valores adicionais fictícios para cálculo (depois pode pedir input do usuário se quiser)
-    circunferencia_cintura = 85  # Você pode mudar para o valor real ou pedir no cadastro futuramente
+
+    circunferencia_cintura = 85  # Valor fixo temporário
 
     st.subheader("Resumo de Saúde")
 
@@ -50,9 +48,38 @@ def exibir_treino(usuario):
         st.write(f"**Idade Metabólica Estimada:** {idade_metabolica:.1f} anos")
         st.write(f"**Ingestão Recomendada de Água:** {agua_necessaria:.0f} ml/dia")
         st.write(f"**Ingestão Recomendada de Proteína:** {proteina_necessaria:.0f} g/dia")
-        
+
     if st.button("Exportar treino para PDF (em breve)"):
         st.info("Função de exportação em PDF ainda não implementada.")
+
+# Função para criar perfil rápido (se o usuário logar sem dados completos)
+def preencher_dados_usuario():
+    st.subheader("Complete seu Perfil de Treino")
+
+    with st.form("formulario_usuario"):
+        idade = st.number_input("Idade", min_value=10, max_value=100, step=1)
+        peso = st.number_input("Peso (kg)", min_value=30.0, max_value=200.0, step=0.1)
+        altura = st.number_input("Altura (metros)", min_value=1.0, max_value=2.5, step=0.01)
+        genero = st.selectbox("Gênero", ["masculino", "feminino"])
+        objetivo = st.selectbox("Objetivo", ["hipertrofia", "emagrecimento", "resistência", "manutenção"])
+        experiencia = st.selectbox("Nível de Experiência", ["iniciante", "intermediário", "avançado"])
+        dias_treino = st.selectbox("Quantos dias por semana pode treinar?", [2, 3, 4, 5])
+
+        submitted = st.form_submit_button("Salvar Perfil")
+
+    if submitted:
+        usuario_atual = list(st.session_state['usuario'])
+        usuario_atual[3] = idade
+        usuario_atual[4] = peso
+        usuario_atual[5] = altura
+        usuario_atual[6] = genero
+        usuario_atual[7] = objetivo
+        usuario_atual.append(experiencia)
+        usuario_atual.append(dias_treino)
+
+        st.session_state['usuario'] = usuario_atual
+        st.success("Perfil atualizado! Agora seu treino será gerado corretamente.")
+        st.rerun()
 
 # Interface de login
 def login():
@@ -88,6 +115,7 @@ def cadastro():
 
 # Função principal
 def main():
+    st.set_page_config(page_title="Gerador de Treino Personalizado", layout="wide")
     st.title("🏋️‍♂️ App de Treino Personalizado")
 
     menu = st.sidebar.selectbox("Menu", ["Login", "Cadastro"])
@@ -98,8 +126,14 @@ def main():
             del st.session_state['usuario']
             st.rerun()
 
-        st.subheader("Seu Treino Personalizado")
-        exibir_treino(st.session_state['usuario'])
+        usuario = st.session_state['usuario']
+
+        # Se faltar dados, pedir para completar perfil
+        if len(usuario) < 10:  
+            preencher_dados_usuario()
+        else:
+            st.subheader("Seu Treino Personalizado")
+            exibir_treino(usuario)
 
     else:
         if menu == "Login":
