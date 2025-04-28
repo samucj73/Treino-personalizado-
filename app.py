@@ -11,7 +11,27 @@ from calculos import (
     recomendacao_proteina
 )
 
-# Função para criar perfil rápido (se o usuário logar sem dados completos)
+# Função auxiliar para atualizar dados do usuário
+def atualizar(nome, idade, peso, altura, genero, objetivo, experiencia, dias_treino):
+    usuario_atual = list(st.session_state['usuario'])
+    usuario_atual[1] = nome
+    usuario_atual[3] = idade
+    usuario_atual[4] = peso
+    usuario_atual[5] = altura
+    usuario_atual[6] = genero
+    usuario_atual[7] = objetivo
+    if len(usuario_atual) > 8:
+        usuario_atual[8] = experiencia
+        usuario_atual[9] = dias_treino
+    else:
+        usuario_atual.append(experiencia)
+        usuario_atual.append(dias_treino)
+
+    st.session_state['usuario'] = usuario_atual
+    st.success("Perfil atualizado com sucesso!")
+    st.rerun()
+
+# Função para criar perfil rápido
 def preencher_dados_usuario():
     st.subheader("Complete seu Perfil de Treino")
 
@@ -27,18 +47,16 @@ def preencher_dados_usuario():
         submitted = st.form_submit_button("Salvar Perfil")
 
     if submitted:
-        usuario_atual = list(st.session_state['usuario'])
-        usuario_atual[3] = idade
-        usuario_atual[4] = peso
-        usuario_atual[5] = altura
-        usuario_atual[6] = genero
-        usuario_atual[7] = objetivo
-        usuario_atual.append(experiencia)
-        usuario_atual.append(dias_treino)
-
-        st.session_state['usuario'] = usuario_atual
-        st.success("Perfil atualizado! Agora seu treino será gerado corretamente.")
-        st.rerun()
+        atualizar(
+            st.session_state['usuario'][1],  # nome
+            idade,
+            peso,
+            altura,
+            genero,
+            objetivo,
+            experiencia,
+            dias_treino
+        )
 
 # Interface de login
 def login():
@@ -92,7 +110,7 @@ def main():
             preencher_dados_usuario()
         else:
             st.subheader("Seu Treino Personalizado")
-            exibir_treino(usuario)
+            exibir_treino(usuario, atualizar)
 
     else:
         if menu == "Login":
