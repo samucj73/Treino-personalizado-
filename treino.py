@@ -25,7 +25,7 @@ def exibir_treino(usuario, atualizar_func):
     with st.form("formulario_edicao"):
         novo_dias_treino = st.number_input("Dias de treino por semana", min_value=1, max_value=7, value=dias_treino)
         if st.form_submit_button("Salvar Alterações"):
-            atualizar(nome, idade, peso, altura, genero, objetivo, experiencia, novo_dias_treino)
+            atualizar_func(nome, idade, peso, altura, genero, objetivo, experiencia, novo_dias_treino)
             st.success("Perfil atualizado com sucesso!")
 
     st.subheader("Resumo de Saúde")
