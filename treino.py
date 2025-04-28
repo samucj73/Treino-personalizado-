@@ -1,6 +1,11 @@
 import streamlit as st
 import pandas as pd
 
+# Função para gerar introdução do treino
+def gerar_treino(usuario):
+    objetivo = usuario[7]
+    return f"Treino personalizado focado em **{objetivo.capitalize()}**!"
+
 # Função para exibir o treino
 def exibir_treino(usuario):
     treino = gerar_treino(usuario)
@@ -24,7 +29,6 @@ def exibir_treino(usuario):
             st.success("Perfil atualizado com sucesso!")
 
     st.subheader("Resumo de Saúde")
-    
 
     # Definir séries, repetições e descanso com base no objetivo e experiência
     if objetivo == "hipertrofia":
@@ -141,6 +145,6 @@ def exibir_treino(usuario):
     - **Dica:** Consulte um profissional de educação física para ajustes personalizados!
     """)
 
-# Exemplo de uso
-usuario = [1, "Nome", "email@example.com", 30, 70, 1.75, "masculino", "hipertrofia", "intermediário"]
-gerar_treino(usuario)
+# Exemplo de uso para teste local
+usuario = [1, "Nome", "email@example.com", 30, 70, 1.75, "masculino", "hipertrofia", "intermediário", 4]
+exibir_treino(usuario)
