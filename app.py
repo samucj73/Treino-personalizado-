@@ -14,19 +14,24 @@ def exibir_treino(usuario):
 
     st.subheader("Cálculos de Saúde")
     st.write(f"**IMC (Índice de Massa Corporal):** {imc:.2f} ({faixa_imc})")
-    
-    # Exibir orientações com base no IMC
-    if imc < 18.5:
-        st.write("Categoria: Abaixo do peso")
-    elif 18.5 <= imc < 24.9:
-        st.write("Categoria: Peso normal")
-    elif 25 <= imc < 29.9:
-        st.write("Categoria: Sobrepeso")
-    else:
-        st.write("Categoria: Obesidade")
-
     st.write(f"**Taxa de Metabolismo Basal (TMB):** {tmb:.2f} kcal/dia")
-    
+
+    # Mostrar análises avançadas
+    if st.button("Mostrar Análises Avançadas"):
+        circunferencia_cintura = st.number_input("Circunferência da Cintura (cm)", min_value=50.0, max_value=200.0)
+
+        percentual_gordura = calcular_percentual_gordura(usuario[4], circunferencia_cintura, usuario[3], usuario[6])
+        massa_muscular = calcular_massa_muscular(usuario[4], percentual_gordura)
+        idade_metabolica = calcular_idade_metabolica(tmb, usuario[3])
+        agua_necessaria = recomendacao_hidratacao(usuario[4])
+        proteina_necessaria = recomendacao_proteina(usuario[4], usuario[7])
+
+        st.write(f"**Percentual de Gordura Estimado:** {percentual_gordura:.2f}%")
+        st.write(f"**Massa Muscular Estimada:** {massa_muscular:.2f} kg")
+        st.write(f"**Idade Metabólica Estimada:** {idade_metabolica:.1f} anos")
+        st.write(f"**Ingestão Recomendada de Água:** {agua_necessaria:.0f} ml/dia")
+        st.write(f"**Ingestão Recomendada de Proteína:** {proteina_necessaria:.0f} g/dia")
+
     if st.button("Exportar treino para PDF (em breve)"):
         st.info("Função de exportação em PDF ainda não implementada.")
 
