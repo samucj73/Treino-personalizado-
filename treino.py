@@ -1,14 +1,30 @@
 import streamlit as st
 import pandas as pd
 
-# Função para gerar treino
-def gerar_treino(usuario):
+# Função para exibir o treino
+def exibir_treino(usuario):
+    treino = gerar_treino(usuario)
+    st.markdown(treino)
+
+    # Extrair dados do usuário
+    nome = usuario[1]  # Nome
     idade = usuario[3]
     peso = usuario[4]
     altura = usuario[5]
-    genero = usuario[6].lower()
-    objetivo = usuario[7].lower()
-    experiencia = usuario[8].lower()
+    genero = usuario[6]
+    objetivo = usuario[7]
+    experiencia = usuario[8]
+    dias_treino = usuario[9]  # Agora temos dias_treino
+
+    # Exibir as informações para edição
+    with st.form("formulario_edicao"):
+        novo_dias_treino = st.number_input("Dias de treino por semana", min_value=1, max_value=7, value=dias_treino)
+        if st.form_submit_button("Salvar Alterações"):
+            atualizar(nome, idade, peso, altura, genero, objetivo, experiencia, novo_dias_treino)
+            st.success("Perfil atualizado com sucesso!")
+
+    st.subheader("Resumo de Saúde")
+    
 
     # Definir séries, repetições e descanso com base no objetivo e experiência
     if objetivo == "hipertrofia":
