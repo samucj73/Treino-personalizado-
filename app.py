@@ -94,11 +94,12 @@ def cadastro():
     genero = st.selectbox("Gênero", ["masculino", "feminino"], key="cad_genero")
     objetivo = st.text_input("Objetivo", key="cad_objetivo")
     experiencia = st.selectbox("Experiência", ["iniciante", "intermediário", "avançado"], key="cad_experiencia")
-
-    if st.button("Cadastrar"):
-        cadastrar(nome, senha, idade, peso, altura, genero, objetivo, experiencia)
+    dias_treino = st.selectbox("Quantos dias por semana pode treinar?", [2, 3, 4, 5], key="cad_dias_treino")
+if st.button("Cadastrar"):
+        cadastrar(nome, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino)
         st.success(f"Usuário {nome} cadastrado com sucesso!")
         st.info("Agora faça login para acessar seu treino.")
+    
 
 # Função principal
 def main():
