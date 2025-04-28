@@ -11,12 +11,13 @@ def get_db_connection():
     )
     return conn
 
-# Função para criar a tabela no banco de dados
+# Função para criar a tabela no banco de dados e garantir que a coluna dias_treino existe
 def criar_tabela():
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
 
+        # Criação da tabela, se não existir
         criar_tabela_sql = """
         CREATE TABLE IF NOT EXISTS usuariosam (
             id SERIAL PRIMARY KEY,
@@ -27,10 +28,25 @@ def criar_tabela():
             altura FLOAT,
             genero VARCHAR(10),
             objetivo VARCHAR(100),
-            experiencia VARCHAR(20)
+            experiencia VARCHAR(20),
+            dias_treino INT
         );
         """
         cursor.execute(criar_tabela_sql)
+
+        # Verificar se a coluna dias_treino já existe, caso contrário, adiciona
+        verificar_coluna_sql = """
+        DO $$
+        BEGIN
+            IF NOT EXISTS (
+                SELECT 1 FROM information_schema.columns 
+                WHERE table_name='usuariosam' AND column_name='dias_treino'
+            ) THEN
+                ALTER TABLE usuariosam ADD COLUMN dias_treino INT;
+            END IF;
+        END $$;
+        """
+        cursor.execute(verificar_coluna_sql)
         conn.commit()
 
     except Exception as e:
@@ -62,3 +78,17 @@ def obter_usuario(nome, senha):
     cursor.close()
     conn.close()
     return usuario
+
+# Função para atualizar o perfil do usuário
+def atualizar_usuario(nome, idade, peso, altura, genero, objetivo, experiencia, dias_treino):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    update_query = sql.SQL("""
+        UPDATE usuariosam 
+        SET idade = %s, peso = %s, altura = %s, genero = %s, objetivo = %s, experiencia = %s, dias_treino = %s
+        WHERE nome = %s
+    """)
+    cursor.execute(update_query, (idade, peso, altura, genero, objetivo, experiencia, dias_treino, nome))
+    conn.commit()
+    cursor.close()
+    conn.close()
