@@ -1,7 +1,15 @@
 import streamlit as st
 from usuario import cadastrar, obter
 from treino import gerar_treino
-from calculos import calcular_imc, calcular_tmb
+from calculos import (
+    calcular_imc,
+    calcular_tmb,
+    calcular_percentual_gordura,
+    calcular_massa_muscular,
+    calcular_idade_metabolica,
+    recomendacao_hidratacao,
+    recomendacao_proteina
+)
 
 # Função para exibir o treino
 def exibir_treino(usuario):
