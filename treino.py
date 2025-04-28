@@ -1,3 +1,4 @@
+import streamlit as st
 # Função para gerar treino
 def gerar_treino(usuario):
     idade = usuario[3]
