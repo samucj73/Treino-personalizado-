@@ -103,25 +103,23 @@ def gerar_treino(usuario):
     else:
         treino += f"""
 - Agachamento frontal barra ({series}x{reps}) - Barra
+- Agachamento búlgaro halteres ({
+    else:
+        treino += f"""
+- Agachamento frontal barra ({series}x{reps}) - Barra
 - Agachamento búlgaro halteres ({series}x{reps}) - Halteres
-- Levantamento terra ({series}x{reps}) - Barra
-- Mesa flexora ({series}x{reps}) - Máquina
-- Glúteo 4 apoios caneleira ({series}x{reps}) - Caneleira
-- Stiff barra ({series}x{reps}) - Barra
+- Leg press 45º ({series}x{reps}) - Leg Press
+- Extensão de quadril cabo ({series}x{reps}) - Polia
+- Cadeira abdutora ({series}x{reps}) - Máquina
+- Elevação de quadril solo ({series}x{reps}) - Peso corporal
 
-- Abdominal infra solo (3x20) - Peso corporal
+- Abdominal supra banco (3x20) - Banco + Peso corporal
 - Prancha lateral (3x30s) - Colchonete
-- Abdominal bicicleta (3x20) - Peso corporal
+- Abdominal infra no banco (3x20) - Banco
 """
 
-    treino += "\n---\n"
-    treino += "_Recomendamos avaliação médica antes de iniciar atividades físicas._\n"
-
-    treino += f"\n**Observação:** Este treino foi adaptado para **{genero.capitalize()} {experiencia.capitalize()}** visando **{objetivo.capitalize()}**.\n"
+    # Fim do treino
+    treino += "---\n"
+    treino += "Lembre-se sempre de realizar os exercícios com a forma correta e progredir de maneira segura! Em caso de dúvidas, consulte um profissional de saúde ou treinador!"
 
     return treino
-
-# Exibir treino
-def exibir_treino(usuario):
-    treino = gerar_treino(usuario)
-    st.markdown(treino)
