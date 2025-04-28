@@ -16,30 +16,41 @@ def exibir_treino(usuario):
     treino = gerar_treino(usuario)
     st.markdown(treino)
 
-    # Calcular IMC e TMB
-    imc, faixa_imc = calcular_imc(usuario[4], usuario[5])
-    tmb = calcular_tmb(usuario[3], usuario[4], usuario[5], usuario[6])
+    # Extrair dados do usuário
+    idade = usuario[3]
+    peso = usuario[4]
+    altura = usuario[5]
+    genero = usuario[6]
+    objetivo = usuario[7]
+    
+    # Valores adicionais fictícios para cálculo (depois pode pedir input do usuário se quiser)
+    circunferencia_cintura = 85  # Você pode mudar para o valor real ou pedir no cadastro futuramente
 
-    st.subheader("Cálculos de Saúde")
-    st.write(f"**IMC (Índice de Massa Corporal):** {imc:.2f} ({faixa_imc})")
-    st.write(f"**Taxa de Metabolismo Basal (TMB):** {tmb:.2f} kcal/dia")
+    st.subheader("Resumo de Saúde")
 
-    # Mostrar análises avançadas
-    if st.button("Mostrar Análises Avançadas"):
-        circunferencia_cintura = st.number_input("Circunferência da Cintura (cm)", min_value=50.0, max_value=200.0)
+    col1, col2 = st.columns(2)
 
-        percentual_gordura = calcular_percentual_gordura(usuario[4], circunferencia_cintura, usuario[3], usuario[6])
-        massa_muscular = calcular_massa_muscular(usuario[4], percentual_gordura)
-        idade_metabolica = calcular_idade_metabolica(tmb, usuario[3])
-        agua_necessaria = recomendacao_hidratacao(usuario[4])
-        proteina_necessaria = recomendacao_proteina(usuario[4], usuario[7])
+    with col1:
+        imc, faixa_imc = calcular_imc(peso, altura)
+        st.metric("IMC", f"{imc:.2f}", faixa_imc)
 
-        st.write(f"**Percentual de Gordura Estimado:** {percentual_gordura:.2f}%")
+    with col2:
+        tmb = calcular_tmb(idade, peso, altura, genero)
+        st.metric("TMB", f"{tmb:.0f} kcal/dia")
+
+    with st.expander("Análise Avançada de Saúde e Recomendações"):
+        percentual_gordura = calcular_percentual_gordura(peso, circunferencia_cintura, idade, genero)
+        massa_muscular = calcular_massa_muscular(peso, percentual_gordura)
+        idade_metabolica = calcular_idade_metabolica(tmb, idade)
+        agua_necessaria = recomendacao_hidratacao(peso)
+        proteina_necessaria = recomendacao_proteina(peso, objetivo)
+
+        st.write(f"**Percentual de Gordura Corporal Estimado:** {percentual_gordura:.2f}%")
         st.write(f"**Massa Muscular Estimada:** {massa_muscular:.2f} kg")
         st.write(f"**Idade Metabólica Estimada:** {idade_metabolica:.1f} anos")
         st.write(f"**Ingestão Recomendada de Água:** {agua_necessaria:.0f} ml/dia")
         st.write(f"**Ingestão Recomendada de Proteína:** {proteina_necessaria:.0f} g/dia")
-
+        
     if st.button("Exportar treino para PDF (em breve)"):
         st.info("Função de exportação em PDF ainda não implementada.")
 
