@@ -146,5 +146,5 @@ def exibir_treino(usuario, atualizar_func):
     """)
 
 # Exemplo de uso para teste local
-usuario = [1, "Nome", "email@example.com", 30, 70, 1.75, "masculino", "hipertrofia", "intermediário", 4]
-exibir_treino(usuario)
+usuario = [1, "Nome", "email@example.com", 30, 70, 1.75, "masculino", "hipertrofia", "intermediário", 4] 
+#exibir_treino(usuario)
