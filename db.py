@@ -56,14 +56,14 @@ def criar_tabela():
         conn.close()
 
 # Função para cadastrar usuário
-def cadastrar_usuario(nome, senha, idade, peso, altura, genero, objetivo, experiencia):
+def cadastrar_usuario(nome, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino):
     conn = get_db_connection()
     cursor = conn.cursor()
     insert_query = sql.SQL("""
-        INSERT INTO usuariosam (nome, senha, idade, peso, altura, genero, objetivo, experiencia)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO usuariosam (nome, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
     """)
-    cursor.execute(insert_query, (nome, senha, idade, peso, altura, genero, objetivo, experiencia))
+    cursor.execute(insert_query, (nome, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino))
     conn.commit()
     cursor.close()
     conn.close()
