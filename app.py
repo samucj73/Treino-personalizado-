@@ -14,18 +14,28 @@ from calculos import (
 # Função auxiliar para atualizar dados do usuário
 def atualizar(nome, idade, peso, altura, genero, objetivo, experiencia, dias_treino):
     usuario_atual = list(st.session_state['usuario'])
+
+    # Garante que a lista tenha pelo menos até o índice 7
+    while len(usuario_atual) <= 7:
+        usuario_atual.append(None)
+
     usuario_atual[1] = nome
     usuario_atual[3] = idade
     usuario_atual[4] = peso
     usuario_atual[5] = altura
     usuario_atual[6] = genero
     usuario_atual[7] = objetivo
-    if len(usuario_atual) > 8:
-        usuario_atual[8] = experiencia
-        usuario_atual[9] = dias_treino
-    else:
+
+    # Atualiza experiência e dias de treino
+    if len(usuario_atual) == 8:
         usuario_atual.append(experiencia)
+    else:
+        usuario_atual[8] = experiencia
+
+    if len(usuario_atual) == 9:
         usuario_atual.append(dias_treino)
+    else:
+        usuario_atual[9] = dias_treino
 
     st.session_state['usuario'] = usuario_atual
     st.success("Perfil atualizado com sucesso!")
