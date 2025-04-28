@@ -96,36 +96,36 @@ objetivo = "aumento_muscular"  # Exemplo de objetivo
 
 # Calcular IMC
 imc, faixa_imc = calcular_imc(peso, altura)
-print(f"IMC: {imc:.2f} ({faixa_imc})")
+st.write(f"**IMC (Índice de Massa Corporal):** {imc:.2f} ({faixa_imc})")
 
 # Calcular TMB
 tmb = calcular_tmb(idade, peso, altura, genero)
-print(f"TMB: {tmb:.2f} kcal/dia")
+st.write(f"TMB: {tmb:.2f} kcal/dia")
 
 # Calcular calorias diárias
 calorias = calcular_calorias_diarias(tmb, nivel_atividade)
-print(f"Calorias necessárias: {calorias:.2f} kcal/dia")
+st.write(f"Calorias necessárias: {calorias:.2f} kcal/dia")
 
 # Calcular percentual de gordura corporal
 percentual_gordura = calcular_percentual_gordura(peso, circunferencia_cintura, idade, genero)
-print(f"Percentual de gordura corporal estimado: {percentual_gordura:.2f}%")
+st.write(f"Percentual de gordura corporal estimado: {percentual_gordura:.2f}%")
 
 # Calcular massa muscular
 massa_muscular = calcular_massa_muscular(peso, percentual_gordura)
-print(f"Massa muscular estimada: {massa_muscular:.2f} kg")
+st.write(f"Massa muscular estimada: {massa_muscular:.2f} kg")
 
 # Calcular gasto calórico com exercício
 gasto_exercicio = calcular_gasto_calorico_exercicio(tipo_exercicio, duracao_exercicio)
-print(f"Gasto calórico com {tipo_exercicio}: {gasto_exercicio:.2f} kcal")
+st.write(f"Gasto calórico com {tipo_exercicio}: {gasto_exercicio:.2f} kcal")
 
 # Calcular idade metabólica
 idade_metabolica = calcular_idade_metabolica(tmb, idade)
-print(f"Idade metabólica estimada: {idade_metabolica:.2f} anos")
+st.write(f"Idade metabólica estimada: {idade_metabolica:.2f} anos")
 
 # Recomendação de ingestão de água
 agua_necessaria = recomendacao_hidratacao(peso)
-print(f"Ingestão recomendada de água: {agua_necessaria:.2f} ml/dia")
+st.write(f"Ingestão recomendada de água: {agua_necessaria:.2f} ml/dia")
 
 # Recomendar ingestão de proteína
 proteina_necessaria = recomendacao_proteina(peso, objetivo)
-print(f"Ingestão recomendada de proteína: {proteina_necessaria:.2f} g/dia")
+st.write(f"Ingestão recomendada de proteína: {proteina_necessaria:.2f} g/dia")
