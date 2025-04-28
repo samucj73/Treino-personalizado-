@@ -4,17 +4,32 @@ from treino import gerar_treino
 from treino import exibir_treino
 from calculos import calcular_imc, calcular_tmb
 
+# Função para calcular IMC
+def calcular_imc(altura, peso):
+    imc = peso / (altura ** 2)
+    if imc < 18.5:
+        faixa_imc = "Abaixo do peso"
+    elif 18.5 <= imc < 24.9:
+        faixa_imc = "Peso normal"
+    elif 25 <= imc < 29.9:
+        faixa_imc = "Sobrepeso"
+    else:
+        faixa_imc = "Obesidade"
+    return imc, faixa_imc  # Retorna o IMC e a faixa
+
 # Função para exibir o treino
 def exibir_treino(usuario):
     treino = gerar_treino(usuario)
     st.markdown(treino)
 
     # Calcular IMC e TMB
-    imc = calcular_imc(usuario[4], usuario[5])
+    imc, faixa_imc = calcular_imc(usuario[4], usuario[5])
     tmb = calcular_tmb(usuario[3], usuario[4], usuario[5], usuario[6])
 
     st.subheader("Cálculos de Saúde")
-    st.write(f"**IMC (Índice de Massa Corporal):** {imc:.2f}")
+    st.write(f"**IMC (Índice de Massa Corporal):** {imc:.2f} ({faixa_imc})")
+    
+    # Exibir orientações com base no IMC
     if imc < 18.5:
         st.write("Categoria: Abaixo do peso")
     elif 18.5 <= imc < 24.9:
