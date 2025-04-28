@@ -1,4 +1,8 @@
 import streamlit as st
+
+# DEVE VIR AQUI:
+st.set_page_config(page_title="Gerador de Treino Personalizado", layout="wide")
+
 from usuario import cadastrar, obter
 from treino import exibir_treino
 from calculos import (
@@ -95,15 +99,14 @@ def cadastro():
     objetivo = st.text_input("Objetivo", key="cad_objetivo")
     experiencia = st.selectbox("Experiência", ["iniciante", "intermediário", "avançado"], key="cad_experiencia")
     dias_treino = st.selectbox("Quantos dias por semana pode treinar?", [2, 3, 4, 5], key="cad_dias_treino")
-if st.button("Cadastrar"):
+    
+    if st.button("Cadastrar"):
         cadastrar(nome, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino)
         st.success(f"Usuário {nome} cadastrado com sucesso!")
         st.info("Agora faça login para acessar seu treino.")
-    
 
 # Função principal
 def main():
-    st.set_page_config(page_title="Gerador de Treino Personalizado", layout="wide")
     st.title("🏋️‍♂️ App de Treino Personalizado")
 
     menu = st.sidebar.selectbox("Menu", ["Login", "Cadastro"])
