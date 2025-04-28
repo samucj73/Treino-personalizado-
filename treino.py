@@ -103,10 +103,6 @@ def gerar_treino(usuario):
     else:
         treino += f"""
 - Agachamento frontal barra ({series}x{reps}) - Barra
-- Agachamento búlgaro halteres ({
-    else:
-        treino += f"""
-- Agachamento frontal barra ({series}x{reps}) - Barra
 - Agachamento búlgaro halteres ({series}x{reps}) - Halteres
 - Leg press 45º ({series}x{reps}) - Leg Press
 - Extensão de quadril cabo ({series}x{reps}) - Polia
