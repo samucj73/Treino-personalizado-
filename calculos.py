@@ -1,5 +1,4 @@
 import streamlit as st  # Adiciona a importação do streamlit
-
 # Função para calcular IMC
 def calcular_imc(peso, altura):
     imc = peso / (altura ** 2)
@@ -36,7 +35,7 @@ def calcular_calorias_diarias(tmb, nivel_atividade):
         calorias = tmb * 1.9
     return calorias
 
-# Função para calcular percentual de gordura corporal
+# Função para estimar o percentual de gordura corporal
 def calcular_percentual_gordura(peso, circunferencia_cintura, idade, genero):
     if genero == "masculino":
         gordura = (0.1 * peso) + (0.23 * circunferencia_cintura) - (0.25 * idade) - 5.4
