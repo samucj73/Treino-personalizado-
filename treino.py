@@ -1,13 +1,13 @@
 import streamlit as st
 import pandas as pd
 
-# Função para gerar introdução do treino
+# 1. Função gerar_treino
 def gerar_treino(usuario):
     objetivo = usuario[7]
     return f"Treino personalizado focado em **{objetivo.capitalize()}**!"
 
-# Função para exibir o treino
-def exibir_treino(usuario):
+# 2. Função exibir_treino
+def exibir_treino(usuario, atualizar_func):
     treino = gerar_treino(usuario)
     st.markdown(treino)
 
