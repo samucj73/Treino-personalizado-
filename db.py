@@ -13,19 +13,13 @@ def get_db_connection():
         password="NT5pmK5SWCB0voVzFqRkofj8YVKjL3Q1"
     )
 
-# Criar ou recriar a tabela de usuários
- def criar_tabela():
-   try:
+# Criar a tabela (se não existir)
+def criar_tabela():
+    try:
         conn = get_db_connection()
         cursor = conn.cursor()
-
-        # Dropa a tabela se ela já existir
-      #  cursor.execute(sql.SQL("DROP TABLE IF EXISTS {table} CASCADE")
-                     #  .format(table=sql.Identifier(NOME_TABELA)))
-
-        # Cria a tabela com a estrutura correta
-      #  cursor.execute(sql.SQL("""
-            CREATE TABLE {table} (
+        cursor.execute(sql.SQL("""
+            CREATE TABLE IF NOT EXISTS {table} (
                 id SERIAL PRIMARY KEY,
                 nome VARCHAR(100) UNIQUE,
                 email VARCHAR(100) UNIQUE,
@@ -39,9 +33,7 @@ def get_db_connection():
                 dias_treino INT
             )
         """).format(table=sql.Identifier(NOME_TABELA)))
-
         conn.commit()
-        print("Tabela criada com sucesso.")
     except Exception as e:
         raise Exception(f"Erro ao criar a tabela: {e}")
     finally:
@@ -71,7 +63,7 @@ def cadastrar_usuario(nome, email, senha, idade, peso, altura, genero, objetivo,
         cursor.execute(sql.SQL("""
             INSERT INTO {table} (nome, email, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-        """).format(table=sql.Identifier(NOME_TABELA)), 
+        """).format(table=sql.Identifier(NOME_TABELA)),
         (nome, email, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino))
         conn.commit()
     except Exception as e:
@@ -88,7 +80,7 @@ def obter_usuario(nome_ou_email, senha):
         cursor.execute(sql.SQL("""
             SELECT * FROM {table}
             WHERE (nome = %s OR email = %s) AND senha = %s
-        """).format(table=sql.Identifier(NOME_TABELA)), 
+        """).format(table=sql.Identifier(NOME_TABELA)),
         (nome_ou_email, nome_ou_email, senha))
         return cursor.fetchone()
     except Exception as e:
@@ -107,7 +99,7 @@ def atualizar_usuario(id_usuario, nome, idade, peso, altura, genero, objetivo, e
             SET nome = %s, idade = %s, peso = %s, altura = %s, genero = %s,
                 objetivo = %s, experiencia = %s, dias_treino = %s
             WHERE id = %s
-        """).format(table=sql.Identifier(NOME_TABELA)), 
+        """).format(table=sql.Identifier(NOME_TABELA)),
         (nome, idade, peso, altura, genero, objetivo, experiencia, dias_treino, id_usuario))
         conn.commit()
     except Exception as e:
@@ -131,7 +123,3 @@ def recuperar_por_email(email):
     finally:
         cursor.close()
         conn.close()
-
-# Rodar a criação da tabela uma única vez, manualmente
-# if __name__ == "__main__":
-   # criar_tabela()
