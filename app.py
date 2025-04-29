@@ -19,7 +19,6 @@ from calculos import (
 def atualizar(nome, idade, peso, altura, genero, objetivo, experiencia, dias_treino):
     usuario_atual = list(st.session_state['usuario'])
 
-    # Garante que a lista tenha pelo menos até o índice 7
     while len(usuario_atual) <= 7:
         usuario_atual.append(None)
 
@@ -30,7 +29,6 @@ def atualizar(nome, idade, peso, altura, genero, objetivo, experiencia, dias_tre
     usuario_atual[6] = genero
     usuario_atual[7] = objetivo
 
-    # Atualiza experiência e dias de treino
     if len(usuario_atual) == 8:
         usuario_atual.append(experiencia)
     else:
@@ -87,7 +85,7 @@ def login():
         else:
             st.error("Nome ou senha inválidos!")
 
-# Interface de cadastro
+# Interface de cadastro (com tratamento de usuário já existente)
 def cadastro():
     st.subheader("Cadastro")
     nome = st.text_input("Nome", key="cad_nome")
@@ -101,9 +99,14 @@ def cadastro():
     dias_treino = st.selectbox("Quantos dias por semana pode treinar?", [2, 3, 4, 5], key="cad_dias_treino")
     
     if st.button("Cadastrar"):
-        cadastrar(nome, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino)
-        st.success(f"Usuário {nome} cadastrado com sucesso!")
-        st.info("Agora faça login para acessar seu treino.")
+        try:
+            cadastrar(nome, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino)
+            st.success(f"Usuário {nome} cadastrado com sucesso!")
+            st.info("Agora faça login para acessar seu treino.")
+        except ValueError as e:
+            st.error(str(e))
+        except Exception as e:
+            st.error(f"Ocorreu um erro ao cadastrar: {e}")
 
 # Função principal
 def main():
@@ -119,8 +122,7 @@ def main():
 
         usuario = st.session_state['usuario']
 
-        # Se faltar dados, pedir para completar perfil
-        if len(usuario) < 10:  
+        if len(usuario) < 10:
             preencher_dados_usuario()
         else:
             st.subheader("Seu Treino Personalizado")
