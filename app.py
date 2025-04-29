@@ -1,6 +1,15 @@
 import streamlit as st
 from usuario import cadastrar, obter, atualizar
 from treino import gerar_treino
+from calculos import (
+    calcular_imc,
+    calcular_tmb,
+    calcular_percentual_gordura,
+    calcular_massa_muscular,
+    calcular_idade_metabolica,
+    recomendacao_hidratacao,
+    recomendacao_proteina
+)
 
 st.set_page_config(page_title="Personal Trainer App", page_icon=":muscle:", layout="centered")
 
@@ -55,7 +64,7 @@ def exibir_treino():
 
     st.title(f"Treino de {usuario[1]}")
 
-    tabs = st.tabs(["📋 Perfil", "🏋️ Treino", "⚙️ Configurações"])
+    tabs = st.tabs(["📋 Perfil", "🏋️ Treino", "⚙️ Configurações", "📊 Análises Corporais"])
 
     with tabs[0]:  # Perfil
         st.subheader("Informações do Usuário")
@@ -102,6 +111,37 @@ def exibir_treino():
             del st.session_state['usuario']
             st.success("Sessão encerrada!")
             st.rerun()
+
+    with tabs[3]:  # Análises Corporais
+        st.subheader("Relatório Corporal")
+
+        peso = usuario[4]
+        altura = usuario[5]
+        idade = usuario[3]
+        genero = usuario[6]
+        objetivo = usuario[7]
+
+        imc, faixa_imc = calcular_imc(peso, altura)
+        tmb = calcular_tmb(idade, peso, altura, genero)
+
+        circunferencia = st.number_input("Informe sua circunferência da cintura (cm)", min_value=30.0, max_value=200.0, step=0.1)
+
+        if circunferencia:
+            gordura = calcular_percentual_gordura(peso, circunferencia, idade, genero)
+            massa_magra = calcular_massa_muscular(peso, gordura)
+            idade_metabolica = calcular_idade_metabolica(tmb, idade)
+            agua = recomendacao_hidratacao(peso)
+            proteina = recomendacao_proteina(peso, objetivo)
+
+            st.markdown(f"**IMC:** {imc:.2f} ({faixa_imc})")
+            st.markdown(f"**TMB (Taxa Metabólica Basal):** {tmb:.2f} kcal/dia")
+            st.markdown(f"**Percentual de Gordura Estimado:** {gordura:.2f}%")
+            st.markdown(f"**Massa Muscular Estimada:** {massa_magra:.2f} kg")
+            st.markdown(f"**Idade Metabólica Estimada:** {idade_metabolica:.0f} anos")
+            st.markdown(f"**Hidratação Recomendada:** {agua:.0f} ml por dia")
+            st.markdown(f"**Proteína Diária Recomendada:** {proteina:.2f} g")
+        else:
+            st.info("Informe a circunferência da cintura para visualizar as análises completas.")
 
 def preencher_dados_usuario():
     st.title("Complete seu Perfil")
