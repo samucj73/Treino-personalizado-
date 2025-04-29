@@ -25,25 +25,26 @@ def exibir_treino(usuario, atualizar_func):
     with st.form("formulario_edicao"):
         novo_dias_treino = st.number_input("Dias de treino por semana", min_value=1, max_value=7, value=dias_treino)
         if st.form_submit_button("Salvar Alterações"):
+            # Atualiza o perfil com o novo número de dias de treino
             atualizar_func(nome, idade, peso, altura, genero, objetivo, experiencia, novo_dias_treino)
             st.success("Perfil atualizado com sucesso!")
 
     st.subheader("Resumo de Saúde")
 
-    # Definir séries, repetições e descanso com base no objetivo e experiência
+    # Definir séries, repetições, descanso e peso com base no objetivo e experiência
     if objetivo == "hipertrofia":
         if experiencia == "iniciante":
-            series, reps, descanso = 3, "12-15", "60s"
+            series, reps, descanso, peso_treino = 3, "12-15", "60s", "moderado"
         elif experiencia == "intermediário":
-            series, reps, descanso = 4, "8-12", "60-90s"
+            series, reps, descanso, peso_treino = 4, "8-12", "60-90s", "pesado"
         else:
-            series, reps, descanso = 5, "6-10", "90s"
+            series, reps, descanso, peso_treino = 5, "6-10", "90s", "muito pesado"
     elif objetivo == "emagrecimento":
-        series, reps, descanso = 3, "15-20", "30-45s"
+        series, reps, descanso, peso_treino = 3, "15-20", "30-45s", "leve"
     elif objetivo == "resistência":
-        series, reps, descanso = 2, "20-25", "30s"
+        series, reps, descanso, peso_treino = 2, "20-25", "30s", "médio"
     else:
-        series, reps, descanso = 3, "12-15", "60s"  # Padrão
+        series, reps, descanso, peso_treino = 3, "12-15", "60s", "moderado"  # Padrão
 
     # Mostrar dados físicos
     st.header("Dados do Usuário")
@@ -61,7 +62,7 @@ def exibir_treino(usuario, atualizar_func):
 
     # Função auxiliar para criar tabela
     def criar_tabela(exercicios):
-        df = pd.DataFrame([{"Exercício": ex, "Séries": series, "Repetições": reps} for ex in exercicios])
+        df = pd.DataFrame([{"Exercício": ex, "Séries": series, "Repetições": reps, "Peso recomendado": peso_treino} for ex in exercicios])
         st.dataframe(df, use_container_width=True)
 
     # Treinos por dia
