@@ -1,6 +1,6 @@
 import streamlit as st
 st.set_page_config(page_title="Personal Trainer App", page_icon=":muscle:", layout="centered")
-from usuario import cadastrar, obter, atualizar
+from usuario import cadastrar, obter, atualizar, recuperar_senha
 from treino import gerar_treino
 from calculos import (
     calcular_imc,
@@ -11,8 +11,6 @@ from calculos import (
     recomendacao_hidratacao,
     recomendacao_proteina
 )
-
-# st.set_page_config(page_title="Personal Trainer App", page_icon=":muscle:", layout="centered")
 
 def cadastro():
     st.subheader("Cadastro de Novo Usuário")
@@ -51,6 +49,25 @@ def login():
                 st.rerun()
             else:
                 st.error("Nome de usuário ou senha incorretos.")
+
+    st.markdown("<a href='#' id='recuperar-senha'>Esqueceu a senha?</a>", unsafe_allow_html=True)
+    if st.session_state.get("recuperar_senha", False):
+        recuperar_senha_form()
+
+def recuperar_senha_form():
+    st.subheader("Recuperação de Senha")
+    email = st.text_input("Digite seu e-mail cadastrado", type="email")
+    
+    if st.button("Recuperar Senha"):
+        if email:
+            try:
+                # Chama a função de recuperação de senha
+                mensagem = recuperar_senha(email)
+                st.success(mensagem)
+            except Exception as e:
+                st.error(f"Erro ao tentar recuperar a senha: {e}")
+        else:
+            st.error("Por favor, insira um e-mail válido.")
 
 def exibir_treino():
     if 'usuario' not in st.session_state:
