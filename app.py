@@ -16,6 +16,7 @@ def cadastro():
     st.subheader("Cadastro de Novo Usuário")
     with st.form("cadastro_form"):
         nome = st.text_input("Nome de usuário")
+        email = st.text_input("E-mail")
         senha = st.text_input("Senha", type="password")
         idade = st.number_input("Idade", min_value=10, max_value=100, step=1)
         peso = st.number_input("Peso (kg)", min_value=30.0, max_value=300.0, step=0.1)
@@ -28,7 +29,7 @@ def cadastro():
         submitted = st.form_submit_button("Cadastrar")
         if submitted:
             try:
-                cadastrar(nome, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino)
+                cadastrar(nome, email, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino)
                 st.success("Usuário cadastrado com sucesso!")
                 st.balloons()
             except Exception as e:
@@ -50,8 +51,7 @@ def login():
             else:
                 st.error("Nome de usuário ou senha incorretos.")
 
-    st.markdown("<a href='#' id='recuperar-senha'>Esqueceu a senha?</a>", unsafe_allow_html=True)
-    if st.session_state.get("recuperar_senha", False):
+    if st.button("Esqueceu a senha?"):
         recuperar_senha_form()
 
 def recuperar_senha_form():
@@ -61,8 +61,7 @@ def recuperar_senha_form():
     if st.button("Recuperar Senha"):
         if email:
             try:
-                # Chama a função de recuperação de senha
-                mensagem = recuperar_senha(email)
+                mensagem = recuperar_credencial(email)
                 st.success(mensagem)
             except Exception as e:
                 st.error(f"Erro ao tentar recuperar a senha: {e}")
