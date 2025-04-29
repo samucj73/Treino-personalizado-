@@ -133,5 +133,5 @@ def recuperar_por_email(email):
         conn.close()
 
 # Rodar a criação da tabela uma única vez, manualmente
-if __name__ == "__main__":
-    criar_tabela()
+# if __name__ == "__main__":
+   # criar_tabela()
