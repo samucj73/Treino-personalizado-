@@ -67,46 +67,54 @@ def cadastrar_usuario(nome, senha, idade, peso, altura, genero, objetivo, experi
     conn = get_db_connection()
     cursor = conn.cursor()
     try:
-        insert_query = sql.SQL("""
+        query = sql.SQL("""
             INSERT INTO {table} (nome, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         """).format(table=sql.Identifier(NOME_TABELA))
-
-        cursor.execute(insert_query, (nome, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino))
+        
+        cursor.execute(query, (nome, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino))
         conn.commit()
+    except Exception as e:
+        raise Exception(f"Erro ao cadastrar usuário: {e}")
     finally:
         cursor.close()
         conn.close()
 
-# Função para obter usuário (login)
+# Função para obter usuário
 def obter_usuario(nome, senha):
     conn = get_db_connection()
     cursor = conn.cursor()
     try:
-        select_query = sql.SQL("""
-            SELECT * FROM {table} WHERE nome = %s AND senha = %s
+        query = sql.SQL("""
+            SELECT * FROM {table}
+            WHERE nome = %s AND senha = %s
         """).format(table=sql.Identifier(NOME_TABELA))
 
-        cursor.execute(select_query, (nome, senha))
+        cursor.execute(query, (nome, senha))
         usuario = cursor.fetchone()
-        return usuario
+        return usuario  # Pode ser None se não encontrar
+    except Exception as e:
+        raise Exception(f"Erro ao obter usuário: {e}")
     finally:
         cursor.close()
         conn.close()
 
-# Função para atualizar perfil do usuário
+# Função para atualizar dados do usuário
 def atualizar_usuario(id_usuario, nome, idade, peso, altura, genero, objetivo, experiencia, dias_treino):
     conn = get_db_connection()
     cursor = conn.cursor()
     try:
-        update_query = sql.SQL("""
+        query = sql.SQL("""
             UPDATE {table}
-            SET nome = %s, idade = %s, peso = %s, altura = %s, genero = %s, objetivo = %s, experiencia = %s, dias_treino = %s
+            SET nome = %s, idade = %s, peso = %s, altura = %s, genero = %s,
+                objetivo = %s, experiencia = %s, dias_treino = %s
             WHERE id = %s
         """).format(table=sql.Identifier(NOME_TABELA))
-
-        cursor.execute(update_query, (nome, idade, peso, altura, genero, objetivo, experiencia, dias_treino, id_usuario))
+        
+        cursor.execute(query, (nome, idade, peso, altura, genero, objetivo, experiencia, dias_treino, id_usuario))
         conn.commit()
+    except Exception as e:
+        raise Exception(f"Erro ao atualizar usuário: {e}")
     finally:
         cursor.close()
         conn.close()
