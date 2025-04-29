@@ -15,7 +15,7 @@ def get_db_connection():
 
 # Criar ou recriar a tabela de usuários
 # def criar_tabela():
-  #  try:
+   try:
         conn = get_db_connection()
         cursor = conn.cursor()
 
