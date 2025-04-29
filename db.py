@@ -20,8 +20,8 @@ def criar_tabela():
         cursor = conn.cursor()
 
         # Dropa a tabela se ela já existir
-        cursor.execute(sql.SQL("DROP TABLE IF EXISTS {table} CASCADE")
-                       .format(table=sql.Identifier(NOME_TABELA)))
+      #  cursor.execute(sql.SQL("DROP TABLE IF EXISTS {table} CASCADE")
+                     #  .format(table=sql.Identifier(NOME_TABELA)))
 
         # Cria a tabela com a estrutura correta
         cursor.execute(sql.SQL("""
