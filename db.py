@@ -14,8 +14,8 @@ def get_db_connection():
     )
 
 # Criar ou recriar a tabela de usuários
-def criar_tabela():
-    try:
+# def criar_tabela():
+  #  try:
         conn = get_db_connection()
         cursor = conn.cursor()
 
@@ -24,7 +24,7 @@ def criar_tabela():
                      #  .format(table=sql.Identifier(NOME_TABELA)))
 
         # Cria a tabela com a estrutura correta
-        cursor.execute(sql.SQL("""
+      #  cursor.execute(sql.SQL("""
             CREATE TABLE {table} (
                 id SERIAL PRIMARY KEY,
                 nome VARCHAR(100) UNIQUE,
