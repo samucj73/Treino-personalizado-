@@ -4,23 +4,21 @@ from psycopg2 import sql
 # Nome da tabela
 NOME_TABELA = "alunos"
 
-# Função para conectar ao banco de dados
+# Conexão com o banco de dados
 def get_db_connection():
-    conn = psycopg2.connect(
+    return psycopg2.connect(
         host="dpg-d06oq3qli9vc73ejebbg-a",
         database="sal_6scc",
         user="sal_6scc_user",
         password="NT5pmK5SWCB0voVzFqRkofj8YVKjL3Q1"
     )
-    return conn
 
-# Função para criar a tabela (com campo email)
+# Criar a tabela de usuários
 def criar_tabela():
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-
-        criar_tabela_sql = sql.SQL("""
+        cursor.execute(sql.SQL("""
             CREATE TABLE IF NOT EXISTS {table} (
                 id SERIAL PRIMARY KEY,
                 nome VARCHAR(100) UNIQUE,
@@ -34,9 +32,7 @@ def criar_tabela():
                 experiencia VARCHAR(20),
                 dias_treino INT
             )
-        """).format(table=sql.Identifier(NOME_TABELA))
-
-        cursor.execute(criar_tabela_sql)
+        """).format(table=sql.Identifier(NOME_TABELA)))
         conn.commit()
     except Exception as e:
         raise Exception(f"Erro ao criar a tabela: {e}")
@@ -44,21 +40,19 @@ def criar_tabela():
         cursor.close()
         conn.close()
 
-# Verificar se usuário já existe
+# Verifica se o nome já existe
 def usuario_existe(nome):
     conn = get_db_connection()
     cursor = conn.cursor()
     try:
-        query = sql.SQL("SELECT 1 FROM {table} WHERE nome = %s").format(
-            table=sql.Identifier(NOME_TABELA)
-        )
-        cursor.execute(query, (nome,))
+        cursor.execute(sql.SQL("SELECT 1 FROM {table} WHERE nome = %s").format(
+            table=sql.Identifier(NOME_TABELA)), (nome,))
         return cursor.fetchone() is not None
     finally:
         cursor.close()
         conn.close()
 
-# Cadastrar usuário (com e-mail)
+# Cadastrar novo usuário
 def cadastrar_usuario(nome, email, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino):
     if usuario_existe(nome):
         raise ValueError(f"O usuário '{nome}' já existe.")
@@ -66,12 +60,11 @@ def cadastrar_usuario(nome, email, senha, idade, peso, altura, genero, objetivo,
     conn = get_db_connection()
     cursor = conn.cursor()
     try:
-        query = sql.SQL("""
+        cursor.execute(sql.SQL("""
             INSERT INTO {table} (nome, email, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-        """).format(table=sql.Identifier(NOME_TABELA))
-        
-        cursor.execute(query, (nome, email, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino))
+        """).format(table=sql.Identifier(NOME_TABELA)), 
+        (nome, email, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino))
         conn.commit()
     except Exception as e:
         raise Exception(f"Erro ao cadastrar usuário: {e}")
@@ -79,17 +72,16 @@ def cadastrar_usuario(nome, email, senha, idade, peso, altura, genero, objetivo,
         cursor.close()
         conn.close()
 
-# Obter usuário por nome e senha
-def obter_usuario(nome, senha):
+# Obter usuário por nome ou email e senha
+def obter_usuario(nome_ou_email, senha):
     conn = get_db_connection()
     cursor = conn.cursor()
     try:
-        query = sql.SQL("""
+        cursor.execute(sql.SQL("""
             SELECT * FROM {table}
-            WHERE nome = %s AND senha = %s
-        """).format(table=sql.Identifier(NOME_TABELA))
-
-        cursor.execute(query, (nome, senha))
+            WHERE (nome = %s OR email = %s) AND senha = %s
+        """).format(table=sql.Identifier(NOME_TABELA)), 
+        (nome_ou_email, nome_ou_email, senha))
         return cursor.fetchone()
     except Exception as e:
         raise Exception(f"Erro ao obter usuário: {e}")
@@ -102,14 +94,13 @@ def atualizar_usuario(id_usuario, nome, idade, peso, altura, genero, objetivo, e
     conn = get_db_connection()
     cursor = conn.cursor()
     try:
-        query = sql.SQL("""
+        cursor.execute(sql.SQL("""
             UPDATE {table}
             SET nome = %s, idade = %s, peso = %s, altura = %s, genero = %s,
                 objetivo = %s, experiencia = %s, dias_treino = %s
             WHERE id = %s
-        """).format(table=sql.Identifier(NOME_TABELA))
-        
-        cursor.execute(query, (nome, idade, peso, altura, genero, objetivo, experiencia, dias_treino, id_usuario))
+        """).format(table=sql.Identifier(NOME_TABELA)), 
+        (nome, idade, peso, altura, genero, objetivo, experiencia, dias_treino, id_usuario))
         conn.commit()
     except Exception as e:
         raise Exception(f"Erro ao atualizar usuário: {e}")
@@ -117,18 +108,16 @@ def atualizar_usuario(id_usuario, nome, idade, peso, altura, genero, objetivo, e
         cursor.close()
         conn.close()
 
-# Recuperar login/senha por e-mail
+# Recuperar senha pelo email
 def recuperar_por_email(email):
     conn = get_db_connection()
     cursor = conn.cursor()
     try:
-        query = sql.SQL("""
+        cursor.execute(sql.SQL("""
             SELECT nome, senha FROM {table}
             WHERE email = %s
-        """).format(table=sql.Identifier(NOME_TABELA))
-        
-        cursor.execute(query, (email,))
-        return cursor.fetchone()  # (nome, senha) ou None
+        """).format(table=sql.Identifier(NOME_TABELA)), (email,))
+        return cursor.fetchone()
     except Exception as e:
         raise Exception(f"Erro ao recuperar por email: {e}")
     finally:
