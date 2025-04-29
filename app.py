@@ -38,12 +38,20 @@ def login():
             if usuario:
                 st.session_state['usuario'] = usuario
                 st.toast(f"Bem-vindo(a), {usuario[1]}!", icon="🎉")
-                st.experimental_rerun()
+                st.rerun()
             else:
                 st.error("Nome de usuário ou senha incorretos.")
 
 def exibir_treino():
+    if 'usuario' not in st.session_state:
+        st.error("Usuário não encontrado na sessão. Faça login novamente.")
+        st.stop()
+
     usuario = st.session_state['usuario']
+    
+    if usuario is None or len(usuario) < 10:
+        st.error("Dados do usuário estão incompletos. Faça login novamente.")
+        st.stop()
 
     st.title(f"Treino de {usuario[1]}")
 
@@ -88,15 +96,20 @@ def exibir_treino():
             if st.form_submit_button("Salvar"):
                 atualizar(usuario[0], nome, idade, peso, altura, genero, objetivo, experiencia, dias_treino)
                 st.success("Dados atualizados! Atualize a página para ver as mudanças.")
-                st.experimental_rerun()
+                st.rerun()
 
         if st.button("Sair da Conta"):
             del st.session_state['usuario']
             st.success("Sessão encerrada!")
-            st.experimental_rerun()
+            st.rerun()
 
 def preencher_dados_usuario():
     st.title("Complete seu Perfil")
+
+    if 'usuario' not in st.session_state:
+        st.error("Sessão expirada. Faça login novamente.")
+        st.stop()
+
     usuario = st.session_state['usuario']
 
     with st.form("form_completar_perfil"):
@@ -111,7 +124,7 @@ def preencher_dados_usuario():
         if st.form_submit_button("Salvar"):
             atualizar(usuario[0], usuario[1], idade, peso, altura, genero, objetivo, experiencia, dias_treino)
             st.success("Perfil atualizado!")
-            st.experimental_rerun()
+            st.rerun()
 
 def main():
     criar_tabela_no_inicio()
@@ -126,7 +139,7 @@ def main():
     else:
         usuario = st.session_state['usuario']
 
-        if usuario[3] is None or usuario[3] == 0:
+        if len(usuario) > 3 and (usuario[3] is None or usuario[3] == 0):
             preencher_dados_usuario()
         else:
             exibir_treino()
