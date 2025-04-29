@@ -13,13 +13,19 @@ def get_db_connection():
         password="NT5pmK5SWCB0voVzFqRkofj8YVKjL3Q1"
     )
 
-# Criar a tabela de usuários
+# Criar ou recriar a tabela de usuários
 def criar_tabela():
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
+
+        # Dropa a tabela se ela já existir
+        cursor.execute(sql.SQL("DROP TABLE IF EXISTS {table} CASCADE")
+                       .format(table=sql.Identifier(NOME_TABELA)))
+
+        # Cria a tabela com a estrutura correta
         cursor.execute(sql.SQL("""
-            CREATE TABLE IF NOT EXISTS {table} (
+            CREATE TABLE {table} (
                 id SERIAL PRIMARY KEY,
                 nome VARCHAR(100) UNIQUE,
                 email VARCHAR(100) UNIQUE,
@@ -33,7 +39,9 @@ def criar_tabela():
                 dias_treino INT
             )
         """).format(table=sql.Identifier(NOME_TABELA)))
+
         conn.commit()
+        print("Tabela criada com sucesso.")
     except Exception as e:
         raise Exception(f"Erro ao criar a tabela: {e}")
     finally:
@@ -123,3 +131,7 @@ def recuperar_por_email(email):
     finally:
         cursor.close()
         conn.close()
+
+# Rodar a criação da tabela uma única vez, manualmente
+if __name__ == "__main__":
+    criar_tabela()
