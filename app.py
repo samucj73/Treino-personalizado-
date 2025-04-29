@@ -56,7 +56,7 @@ def login():
 
 def recuperar_senha_form():
     st.subheader("Recuperação de Senha")
-    email = st.text_input("Digite seu e-mail cadastrado", type="email")
+    email = st.text_input("Digite seu e-mail cadastrado")
     
     if st.button("Recuperar Senha"):
         if email:
