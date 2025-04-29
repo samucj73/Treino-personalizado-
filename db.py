@@ -14,7 +14,7 @@ def get_db_connection():
     )
     return conn
 
-# Função para criar a tabela
+# Função para criar a tabela (com campo email)
 def criar_tabela():
     try:
         conn = get_db_connection()
@@ -24,6 +24,7 @@ def criar_tabela():
             CREATE TABLE IF NOT EXISTS {table} (
                 id SERIAL PRIMARY KEY,
                 nome VARCHAR(100) UNIQUE,
+                email VARCHAR(100) UNIQUE,
                 senha VARCHAR(100),
                 idade INT,
                 peso FLOAT,
@@ -37,14 +38,13 @@ def criar_tabela():
 
         cursor.execute(criar_tabela_sql)
         conn.commit()
-
     except Exception as e:
         raise Exception(f"Erro ao criar a tabela: {e}")
     finally:
         cursor.close()
         conn.close()
 
-# Função para verificar se o usuário já existe
+# Verificar se usuário já existe
 def usuario_existe(nome):
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -53,14 +53,13 @@ def usuario_existe(nome):
             table=sql.Identifier(NOME_TABELA)
         )
         cursor.execute(query, (nome,))
-        existe = cursor.fetchone()
-        return existe is not None
+        return cursor.fetchone() is not None
     finally:
         cursor.close()
         conn.close()
 
-# Função para cadastrar usuário
-def cadastrar_usuario(nome, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino):
+# Cadastrar usuário (com e-mail)
+def cadastrar_usuario(nome, email, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino):
     if usuario_existe(nome):
         raise ValueError(f"O usuário '{nome}' já existe.")
 
@@ -68,11 +67,11 @@ def cadastrar_usuario(nome, senha, idade, peso, altura, genero, objetivo, experi
     cursor = conn.cursor()
     try:
         query = sql.SQL("""
-            INSERT INTO {table} (nome, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO {table} (nome, email, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """).format(table=sql.Identifier(NOME_TABELA))
         
-        cursor.execute(query, (nome, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino))
+        cursor.execute(query, (nome, email, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino))
         conn.commit()
     except Exception as e:
         raise Exception(f"Erro ao cadastrar usuário: {e}")
@@ -80,7 +79,7 @@ def cadastrar_usuario(nome, senha, idade, peso, altura, genero, objetivo, experi
         cursor.close()
         conn.close()
 
-# Função para obter usuário
+# Obter usuário por nome e senha
 def obter_usuario(nome, senha):
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -91,15 +90,14 @@ def obter_usuario(nome, senha):
         """).format(table=sql.Identifier(NOME_TABELA))
 
         cursor.execute(query, (nome, senha))
-        usuario = cursor.fetchone()
-        return usuario  # Pode ser None se não encontrar
+        return cursor.fetchone()
     except Exception as e:
         raise Exception(f"Erro ao obter usuário: {e}")
     finally:
         cursor.close()
         conn.close()
 
-# Função para atualizar dados do usuário
+# Atualizar dados do usuário
 def atualizar_usuario(id_usuario, nome, idade, peso, altura, genero, objetivo, experiencia, dias_treino):
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -115,6 +113,24 @@ def atualizar_usuario(id_usuario, nome, idade, peso, altura, genero, objetivo, e
         conn.commit()
     except Exception as e:
         raise Exception(f"Erro ao atualizar usuário: {e}")
+    finally:
+        cursor.close()
+        conn.close()
+
+# Recuperar login/senha por e-mail
+def recuperar_por_email(email):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        query = sql.SQL("""
+            SELECT nome, senha FROM {table}
+            WHERE email = %s
+        """).format(table=sql.Identifier(NOME_TABELA))
+        
+        cursor.execute(query, (email,))
+        return cursor.fetchone()  # (nome, senha) ou None
+    except Exception as e:
+        raise Exception(f"Erro ao recuperar por email: {e}")
     finally:
         cursor.close()
         conn.close()
