@@ -1,7 +1,7 @@
 import streamlit as st
 
 # DEVE VIR AQUI:
-st.set_page_config(page_title="Gerador de Treino Personalizado", layout="wide")
+# st.set_page_config(page_title="Gerador de Treino Personalizado", layout="wide")
 
 from usuario import cadastrar, obter
 from treino import exibir_treino
