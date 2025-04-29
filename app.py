@@ -1,4 +1,5 @@
 import streamlit as st
+st.set_page_config(page_title="Personal Trainer App", page_icon=":muscle:", layout="centered")
 from usuario import cadastrar, obter, atualizar
 from treino import gerar_treino
 from calculos import (
@@ -11,7 +12,7 @@ from calculos import (
     recomendacao_proteina
 )
 
-st.set_page_config(page_title="Personal Trainer App", page_icon=":muscle:", layout="centered")
+# st.set_page_config(page_title="Personal Trainer App", page_icon=":muscle:", layout="centered")
 
 def cadastro():
     st.subheader("Cadastro de Novo Usuário")
