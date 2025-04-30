@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 
-# Funções auxiliares para conversão segura
 def to_int(valor, default=0):
     try:
         return int(valor)
@@ -14,37 +13,44 @@ def to_float(valor, default=0.0):
     except (TypeError, ValueError):
         return default
 
-# Dicionário de exercícios e equipamentos
 EXERCICIOS_E_EQUIPAMENTOS = {
+    # Grupo A - Peito e Tríceps
     "Supino reto com barra": "Banco reto + Barra olímpica",
     "Supino inclinado com halteres": "Banco inclinado + Halteres",
     "Crucifixo reto": "Banco reto + Halteres",
     "Crossover no cabo": "Máquina de crossover (cabos)",
     "Peck deck": "Máquina peck deck",
+    # Grupo B - Costas e Bíceps
     "Puxada frente aberta": "Máquina de puxada alta",
     "Remada curvada": "Barra ou barra T",
     "Remada unilateral com halteres": "Halter + banco",
     "Remada baixa": "Máquina de remada baixa",
     "Pulldown com pegada neutra": "Máquina ou puxador com pegada neutra",
+    # Grupo C - Pernas e Glúteos
     "Agachamento livre": "Barra + Rack de agachamento",
     "Leg press 45º": "Máquina de leg press",
     "Cadeira extensora": "Máquina extensora",
     "Mesa flexora": "Máquina flexora",
     "Stiff com halteres": "Halteres",
+    # Grupo D - Ombros e Abdômen
     "Desenvolvimento militar": "Máquina ou barra",
     "Elevação lateral": "Halteres",
-    "Elevação frontal": "Halteres ou barra",
     "Desenvolvimento Arnold": "Halteres",
     "Crucifixo inverso na máquina": "Máquina peck deck reversa",
-    "Agachamento sumô com halteres": "Halter ou kettlebell",
-    "Elevação de quadril no banco": "Banco + peso livre",
-    "Afundo com halteres": "Halteres",
-    "Extensão de quadril no cabo": "Cabo com tornozeleira",
-    "Ponte de glúteo solo": "Peso corporal ou barra"
+    "Elevação frontal": "Halteres ou barra",
+    # Grupo E - Abdômen
+    "Prancha": "Colchonete",
+    "Abdominal crunch": "Banco de abdominal ou colchonete",
+    "Elevação de pernas": "Colchonete",
+    "Abdominal oblíquo": "Colchonete",
+    # Grupo F - Panturrilhas
+    "Panturrilha em pé": "Máquina de panturrilha",
+    "Panturrilha sentado": "Máquina de panturrilha sentado",
+    "Elevação de panturrilhas com halteres": "Halteres + degrau"
 }
 
-# Função para gerar treino baseado no perfil
 def gerar_treino(objetivo, experiencia, dias_treino):
+    # Definindo séries e repetições com base no objetivo e experiência
     if objetivo == "hipertrofia":
         if experiencia == "iniciante":
             series, reps = 3, "12-15"
@@ -59,26 +65,53 @@ def gerar_treino(objetivo, experiencia, dias_treino):
     else:
         series, reps = 3, "12-15"
 
+    # Grupos de treino com os exercícios indicados
     grupos = {
         "A - Peito e Tríceps": [
-            "Supino reto com barra", "Supino inclinado com halteres",
-            "Crucifixo reto", "Peck deck", "Crossover no cabo"
+            "Supino reto com barra", 
+            "Supino inclinado com halteres", 
+            "Crucifixo reto", 
+            "Peck deck", 
+            "Crossover no cabo"
         ],
         "B - Costas e Bíceps": [
-            "Puxada frente aberta", "Remada curvada",
-            "Remada unilateral com halteres", "Remada baixa", "Pulldown com pegada neutra"
+            "Puxada frente aberta", 
+            "Remada curvada", 
+            "Remada unilateral com halteres", 
+            "Remada baixa", 
+            "Pulldown com pegada neutra"
         ],
         "C - Pernas e Glúteos": [
-            "Agachamento livre", "Leg press 45º", "Cadeira extensora",
-            "Mesa flexora", "Stiff com halteres"
+            "Agachamento livre", 
+            "Leg press 45º", 
+            "Cadeira extensora", 
+            "Mesa flexora", 
+            "Stiff com halteres"
         ],
         "D - Ombros e Abdômen": [
-            "Desenvolvimento militar", "Elevação lateral", "Desenvolvimento Arnold",
-            "Crucifixo inverso na máquina", "Elevação frontal"
+            "Desenvolvimento militar", 
+            "Elevação lateral", 
+            "Desenvolvimento Arnold", 
+            "Crucifixo inverso na máquina", 
+            "Elevação frontal"
+        ],
+        "E - Abdômen": [
+            "Prancha", 
+            "Abdominal crunch", 
+            "Elevação de pernas", 
+            "Abdominal oblíquo"
+        ],
+        "F - Panturrilhas": [
+            "Panturrilha em pé", 
+            "Panturrilha sentado", 
+            "Elevação de panturrilhas com halteres"
         ]
     }
 
-    dias_disponiveis = list(grupos.items())[:dias_treino]
+    # Seleciona os grupos conforme o número de dias desejados.
+    # Se dias_treino for maior que a quantidade de grupos, utiliza todos os grupos.
+    grupos_lista = list(grupos.items())
+    dias_disponiveis = grupos_lista if dias_treino >= len(grupos_lista) else grupos_lista[:dias_treino]
 
     treino_dividido = {}
     for dia_nome, exercicios in dias_disponiveis:
@@ -96,7 +129,6 @@ def gerar_treino(objetivo, experiencia, dias_treino):
 
     return treino_dividido
 
-# Função principal para exibir o treino com Streamlit
 def exibir_treino(usuario, atualizar_func=lambda *args: None):
     nome = usuario[1]
     idade = to_int(usuario[3], default=25)
@@ -109,7 +141,6 @@ def exibir_treino(usuario, atualizar_func=lambda *args: None):
 
     st.header(f"Treino personalizado para {nome}")
 
-    # Formulário para alterar número de dias de treino
     with st.form("formulario_edicao"):
         novo_dias_treino = st.number_input("Dias de treino por semana", min_value=1, max_value=7, value=dias_treino)
         if st.form_submit_button("Salvar Alterações"):
@@ -118,39 +149,35 @@ def exibir_treino(usuario, atualizar_func=lambda *args: None):
 
     treino = gerar_treino(objetivo, experiencia, novo_dias_treino)
 
-    # Exibir dados do usuário
     st.subheader("Dados do Usuário")
-    st.markdown(f"""
+    st.markdown(f'''
     - **Idade:** {idade} anos  
     - **Peso:** {peso:.1f} kg  
     - **Altura:** {altura:.2f} m  
     - **Gênero:** {genero.capitalize()}  
     - **Objetivo:** {objetivo.capitalize()}  
     - **Experiência:** {experiencia.capitalize()}  
-    """)
+    ''')
 
     st.divider()
     st.header("Treino por Dia")
 
-    # Exibir treino dividido por grupo
     for grupo, dados in treino.items():
         with st.expander(grupo):
             st.markdown(f"**Séries:** {dados['séries']} | **Repetições:** {dados['repetições']}")
             for i, ex in enumerate(dados["exercicios"], start=1):
-                st.markdown(f"""{i}. **{ex['nome']}**  
-> Equipamento: *{ex['equipamento']}*""")
+                st.markdown(f"{i}. **{ex['nome']}**  \n> Equipamento: *{ex['equipamento']}*")
 
     st.divider()
     st.subheader("Orientações Gerais")
-    st.markdown("""
+    st.markdown('''
     - **Aquecimento:** Faça 5 a 10 minutos antes do treino.  
-    - **Descanso entre séries:** 30s a 90s dependendo da intensidade.  
+    - **Descanso entre séries:** 30s a 90s, dependendo da intensidade.  
     - **Alongamento:** Recomendado após o treino.  
     - **Progresso:** Aumente a carga gradualmente com técnica adequada.  
     - Consulte um profissional para ajustes personalizados.
-    """)
+    ''')
 
 # Exemplo para teste local
-if __name__ == "__main__":
-    usuario = [1, "João", "joao@email.com", "28", 75, 1.78, "masculino", "hipertrofia", "intermediário", 4]
-    exibir_treino(usuario)
+usuario = [1, "João", "joao@email.com", "28", 75, 1.78, "masculino", "hipertrofia", "intermediário", 6]
+exibir_treino(usuario)
