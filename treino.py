@@ -1,6 +1,19 @@
 import streamlit as st
 import pandas as pd
 
+# Funções auxiliares para conversão segura
+def to_int(valor, default=0):
+    try:
+        return int(valor)
+    except (TypeError, ValueError):
+        return default
+
+def to_float(valor, default=0.0):
+    try:
+        return float(valor)
+    except (TypeError, ValueError):
+        return default
+
 # 1. Função gerar_treino
 def gerar_treino(objetivo, experiencia, dias_treino):
     if objetivo == "hipertrofia":
@@ -80,18 +93,19 @@ def gerar_treino(objetivo, experiencia, dias_treino):
 # 2. Função exibir_treino
 def exibir_treino(usuario, atualizar_func=lambda *args: None):
     nome = usuario[1]
-    idade = int(usuario[3])  # Garantir que a idade seja um inteiro
-    peso = usuario[4]
-    altura = usuario[5]
+
+    idade = to_int(usuario[3], default=25)
+    peso = to_float(usuario[4], default=70.0)
+    altura = to_float(usuario[5], default=1.70)
     genero = usuario[6]
     objetivo = usuario[7]
     experiencia = usuario[8]
-    dias_treino = usuario[9]
+    dias_treino = to_int(usuario[9], default=3)
 
     st.header(f"Treino personalizado para {nome}")
-    
+
     with st.form("formulario_edicao"):
-        novo_dias_treino = st.number_input("Dias de treino por semana", min_value=1, max_value=7, value=int(dias_treino))  # Garantir que o valor seja inteiro
+        novo_dias_treino = st.number_input("Dias de treino por semana", min_value=1, max_value=7, value=dias_treino)
         if st.form_submit_button("Salvar Alterações"):
             atualizar_func(nome, idade, peso, altura, genero, objetivo, experiencia, novo_dias_treino)
             st.success("Perfil atualizado com sucesso!")
