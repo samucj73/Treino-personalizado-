@@ -50,7 +50,6 @@ EXERCICIOS_E_EQUIPAMENTOS = {
 }
 
 def gerar_treino(objetivo, experiencia, dias_treino):
-    # Definindo séries e repetições com base no objetivo e experiência
     if objetivo == "hipertrofia":
         if experiencia == "iniciante":
             series, reps = 3, "12-15"
@@ -65,57 +64,55 @@ def gerar_treino(objetivo, experiencia, dias_treino):
     else:
         series, reps = 3, "12-15"
 
-    # Grupos de treino com os exercícios indicados
     grupos = {
-        "A - Peito e Tríceps": [
+        "Peito e Tríceps": [
             "Supino reto com barra", 
             "Supino inclinado com halteres", 
             "Crucifixo reto", 
             "Peck deck", 
             "Crossover no cabo"
         ],
-        "B - Costas e Bíceps": [
+        "Costas e Bíceps": [
             "Puxada frente aberta", 
             "Remada curvada", 
             "Remada unilateral com halteres", 
             "Remada baixa", 
             "Pulldown com pegada neutra"
         ],
-        "C - Pernas e Glúteos": [
+        "Pernas e Glúteos": [
             "Agachamento livre", 
             "Leg press 45º", 
             "Cadeira extensora", 
             "Mesa flexora", 
             "Stiff com halteres"
         ],
-        "D - Ombros e Abdômen": [
+        "Ombros": [
             "Desenvolvimento militar", 
             "Elevação lateral", 
             "Desenvolvimento Arnold", 
             "Crucifixo inverso na máquina", 
             "Elevação frontal"
         ],
-        "E - Abdômen": [
+        "Abdômen": [
             "Prancha", 
             "Abdominal crunch", 
             "Elevação de pernas", 
             "Abdominal oblíquo"
         ],
-        "F - Panturrilhas": [
+        "Panturrilhas": [
             "Panturrilha em pé", 
             "Panturrilha sentado", 
             "Elevação de panturrilhas com halteres"
         ]
     }
 
-    # Seleciona os grupos conforme o número de dias desejados.
-    # Se dias_treino for maior que a quantidade de grupos, utiliza todos os grupos.
+    # Distribuição cíclica dos grupos nos dias de treino
     grupos_lista = list(grupos.items())
-    dias_disponiveis = grupos_lista if dias_treino >= len(grupos_lista) else grupos_lista[:dias_treino]
-
     treino_dividido = {}
-    for dia_nome, exercicios in dias_disponiveis:
-        treino_dividido[dia_nome] = {
+    for i in range(dias_treino):
+        grupo_nome, exercicios = grupos_lista[i % len(grupos_lista)]
+        nome_dia = f"Dia {i+1} - {grupo_nome}"
+        treino_dividido[nome_dia] = {
             "séries": series,
             "repetições": reps,
             "exercicios": [
@@ -178,6 +175,6 @@ def exibir_treino(usuario, atualizar_func=lambda *args: None):
     - Consulte um profissional para ajustes personalizados.
     ''')
 
-# Exemplo para teste local
+# Teste local
 usuario = [1, "João", "joao@email.com", "28", 75, 1.78, "masculino", "hipertrofia", "intermediário", 6]
 exibir_treino(usuario)
