@@ -91,7 +91,7 @@ def exibir_treino(usuario, atualizar_func=lambda *args: None):
     st.header(f"Treino personalizado para {nome}")
     
     with st.form("formulario_edicao"):
-        novo_dias_treino = st.number_input("Dias de treino por semana", min_value=1, max_value=7, value=dias_treino)
+        novo_dias_treino = st.number_input("Dias de treino por semana", min_value=1, max_value=7, value=int(dias_treino))  # Garantir que o valor seja inteiro
         if st.form_submit_button("Salvar Alterações"):
             atualizar_func(nome, idade, peso, altura, genero, objetivo, experiencia, novo_dias_treino)
             st.success("Perfil atualizado com sucesso!")
