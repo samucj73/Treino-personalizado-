@@ -1,6 +1,5 @@
 import streamlit as st
-st.set_page_config(page_title="Personal Trainer App", page_icon=":muscle:", layout="centered")
-
+import time
 from usuario import cadastrar, obter, atualizar, recuperar_por_email
 from treino import gerar_treino
 from calculos import (
@@ -12,6 +11,14 @@ from calculos import (
     recomendacao_hidratacao,
     recomendacao_proteina
 )
+
+st.set_page_config(page_title="Personal Trainer App", page_icon=":muscle:", layout="centered")
+
+def splash_screen():
+    with st.empty():
+        for i in range(3):
+            st.markdown(f"<h3 style='text-align:center;'>Carregando o app{'.' * (i + 1)}</h3>", unsafe_allow_html=True)
+            time.sleep(0.5)
 
 def cadastro():
     st.subheader("Cadastro de Novo Usuário")
@@ -62,7 +69,7 @@ def recuperar_senha_form():
     if st.button("Recuperar Senha"):
         if email:
             try:
-                mensagem = recuperar_credencial(email)
+                mensagem = recuperar_por_email(email)
                 st.success(mensagem)
             except Exception as e:
                 st.error(f"Erro ao tentar recuperar a senha: {e}")
@@ -70,17 +77,7 @@ def recuperar_senha_form():
             st.error("Por favor, insira um e-mail válido.")
 
 def exibir_treino():
-    if 'usuario' not in st.session_state:
-        st.error("Usuário não encontrado na sessão. Faça login novamente.")
-        st.stop()
-
     usuario = st.session_state['usuario']
-    
-    campos_obrigatorios = ['nome', 'idade', 'peso', 'altura', 'genero', 'objetivo', 'experiencia', 'dias_treino']
-    if any(campo not in usuario for campo in campos_obrigatorios):
-        st.error("Dados do usuário estão incompletos. Faça login novamente.")
-        st.stop()
-
     st.title(f"Treino de {usuario['nome']}")
 
     tabs = st.tabs(["📋 Perfil", "🏋️ Treino", "⚙️ Configurações", "📊 Análises Corporais"])
@@ -101,6 +98,7 @@ def exibir_treino():
 
         progress = st.progress(0)
         for i in range(100):
+            time.sleep(0.005)
             progress.progress(i + 1)
         st.success("Treino carregado!")
 
@@ -113,17 +111,17 @@ def exibir_treino():
         st.subheader("Atualizar Dados")
         with st.form("form_atualizar"):
             nome = st.text_input("Nome", value=usuario['nome'])
-            idade = st.number_input("Idade", min_value=10, max_value=100, value=usuario['idade'], step=1)
-            peso = st.number_input("Peso (kg)", min_value=30.0, max_value=300.0, value=usuario['peso'], step=0.1)
-            altura = st.number_input("Altura (m)", min_value=1.0, max_value=2.5, value=usuario['altura'], step=0.01)
-            genero = st.radio("Gênero", ("Masculino", "Feminino"), index=0 if usuario['genero'] == "Masculino" else 1)
+            idade = st.number_input("Idade", value=usuario['idade'], step=1)
+            peso = st.number_input("Peso (kg)", value=usuario['peso'], step=0.1)
+            altura = st.number_input("Altura (m)", value=usuario['altura'], step=0.01)
+            genero = st.radio("Gênero", ["Masculino", "Feminino"], index=0 if usuario['genero'] == "Masculino" else 1)
             objetivo = st.selectbox("Objetivo", ["Perda de peso", "Ganhar massa muscular", "Melhorar resistência"], index=["Perda de peso", "Ganhar massa muscular", "Melhorar resistência"].index(usuario['objetivo']))
             experiencia = st.selectbox("Experiência", ["Iniciante", "Intermediário", "Avançado"], index=["Iniciante", "Intermediário", "Avançado"].index(usuario['experiencia']))
             dias_treino = st.slider("Dias de treino por semana", 1, 7, value=usuario['dias_treino'])
 
             if st.form_submit_button("Salvar"):
                 atualizar(usuario['id'], nome, idade, peso, altura, genero, objetivo, experiencia, dias_treino)
-                st.success("Dados atualizados! Atualize a página para ver as mudanças.")
+                st.success("Dados atualizados com sucesso!")
                 st.rerun()
 
         if st.button("Sair da Conta"):
@@ -133,7 +131,6 @@ def exibir_treino():
 
     with tabs[3]:  # Análises Corporais
         st.subheader("Relatório Corporal")
-
         peso = usuario['peso']
         altura = usuario['altura']
         idade = usuario['idade']
@@ -142,8 +139,7 @@ def exibir_treino():
 
         imc, faixa_imc = calcular_imc(peso, altura)
         tmb = calcular_tmb(idade, peso, altura, genero)
-
-        circunferencia = st.number_input("Informe sua circunferência da cintura (cm)", min_value=30.0, max_value=200.0, step=0.1)
+        circunferencia = st.number_input("Circunferência da cintura (cm)", min_value=30.0, max_value=200.0, step=0.1)
 
         if circunferencia:
             gordura = calcular_percentual_gordura(peso, circunferencia, idade, genero)
@@ -153,43 +149,23 @@ def exibir_treino():
             proteina = recomendacao_proteina(peso, objetivo)
 
             st.markdown(f"**IMC:** {imc:.2f} ({faixa_imc})")
-            st.markdown(f"**TMB (Taxa Metabólica Basal):** {tmb:.2f} kcal/dia")
-            st.markdown(f"**Percentual de Gordura Estimado:** {gordura:.2f}%")
-            st.markdown(f"**Massa Muscular Estimada:** {massa_magra:.2f} kg")
-            st.markdown(f"**Idade Metabólica Estimada:** {idade_metabolica:.0f} anos")
-            st.markdown(f"**Hidratação Recomendada:** {agua:.0f} ml por dia")
-            st.markdown(f"**Proteína Diária Recomendada:** {proteina:.2f} g")
+            st.markdown(f"**TMB:** {tmb:.2f} kcal/dia")
+            st.markdown(f"**Gordura Estimada:** {gordura:.2f}%")
+            st.markdown(f"**Massa Muscular:** {massa_magra:.2f} kg")
+            st.markdown(f"**Idade Metabólica:** {idade_metabolica:.0f} anos")
+            st.markdown(f"**Hidratação Ideal:** {agua:.0f} ml/dia")
+            st.markdown(f"**Proteína Recomendada:** {proteina:.2f} g/dia")
         else:
-            st.info("Informe a circunferência da cintura para visualizar as análises completas.")
+            st.info("Preencha a circunferência da cintura para calcular as análises corporais.")
 
-def preencher_dados_usuario():
-    st.title("Complete seu Perfil")
-
-    if 'usuario' not in st.session_state:
-        st.error("Sessão expirada. Faça login novamente.")
-        st.stop()
-
-    usuario = st.session_state['usuario']
-
-    with st.form("form_completar_perfil"):
-        idade = st.number_input("Idade", min_value=10, max_value=100, step=1)
-        peso = st.number_input("Peso (kg)", min_value=30.0, max_value=300.0, step=0.1)
-        altura = st.number_input("Altura (m)", min_value=1.0, max_value=2.5, step=0.01)
-        genero = st.radio("Gênero", ("Masculino", "Feminino"))
-        objetivo = st.selectbox("Objetivo", ["Perda de peso", "Ganhar massa muscular", "Melhorar resistência"])
-
-        if st.form_submit_button("Salvar"):
-            atualizar(usuario['id'], usuario['nome'], idade, peso, altura, genero, objetivo, usuario['experiencia'], usuario['dias_treino'])
-            st.success("Perfil atualizado com sucesso!")
-            st.rerun()
-
-# BLOCO PRINCIPAL
+# BLOCO PRINCIPAL COM SPLASH E CONTROLE DE ACESSO
 if __name__ == "__main__":
-    st.title("Personal Trainer App")
+    splash_screen()
 
     if 'usuario' in st.session_state:
         exibir_treino()
     else:
+        st.title("Personal Trainer App")
         opcao = st.sidebar.selectbox("Escolha uma opção", ["Login", "Cadastro"])
         if opcao == "Login":
             login()
