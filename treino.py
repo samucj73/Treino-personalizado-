@@ -14,7 +14,7 @@ def to_float(valor, default=0.0):
     except (TypeError, ValueError):
         return default
 
-# 1. Função gerar_treino
+# Função gerar_treino
 def gerar_treino(objetivo, experiencia, dias_treino):
     if objetivo == "hipertrofia":
         if experiencia == "iniciante":
@@ -88,12 +88,28 @@ def gerar_treino(objetivo, experiencia, dias_treino):
         }
     }
 
-    return treino
+    # Aqui poderia haver lógica para distribuir os exercícios entre os dias de treino
+    treino_dividido = dividir_treino_por_dia(treino, dias_treino)
 
-# 2. Função exibir_treino
+    return treino_dividido
+
+def dividir_treino_por_dia(treino, dias_treino):
+    treino_dividido = {}
+    musculos = list(treino.keys())
+
+    for i, musculo in enumerate(musculos):
+        treino_dividido[musculo] = {
+            "exercicios": treino[musculo]["exercicios"],
+            "séries": treino[musculo]["séries"],
+            "repetições": treino[musculo]["repetições"]
+        }
+    
+    # Aqui pode-se fazer uma distribuição mais sofisticada dos treinos por dias
+    return treino_dividido
+
+# Função exibir_treino
 def exibir_treino(usuario, atualizar_func=lambda *args: None):
     nome = usuario[1]
-
     idade = to_int(usuario[3], default=25)
     peso = to_float(usuario[4], default=70.0)
     altura = to_float(usuario[5], default=1.70)
@@ -110,7 +126,7 @@ def exibir_treino(usuario, atualizar_func=lambda *args: None):
             atualizar_func(nome, idade, peso, altura, genero, objetivo, experiencia, novo_dias_treino)
             st.success("Perfil atualizado com sucesso!")
 
-    treino = gerar_treino(objetivo, experiencia, dias_treino)
+    treino = gerar_treino(objetivo, experiencia, novo_dias_treino)
 
     st.subheader("Dados do Usuário")
     st.markdown(f"""
