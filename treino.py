@@ -80,7 +80,7 @@ def gerar_treino(objetivo, experiencia, dias_treino):
 # 2. Função exibir_treino
 def exibir_treino(usuario, atualizar_func=lambda *args: None):
     nome = usuario[1]
-    idade = usuario[3]
+    idade = int(usuario[3])  # Garantir que a idade seja um inteiro
     peso = usuario[4]
     altura = usuario[5]
     genero = usuario[6]
@@ -128,5 +128,5 @@ def exibir_treino(usuario, atualizar_func=lambda *args: None):
     """)
 
 # Exemplo para teste local
-usuario = [1, "João", "joao@email.com", 28, 75, 1.78, "masculino", "hipertrofia", "intermediário", 4]
+usuario = [1, "João", "joao@email.com", "28", 75, 1.78, "masculino", "hipertrofia", "intermediário", 4]
 exibir_treino(usuario)
