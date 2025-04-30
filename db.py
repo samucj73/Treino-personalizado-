@@ -78,11 +78,12 @@ def obter_usuario(nome_ou_email, senha):
     cursor = conn.cursor()
     try:
         cursor.execute(sql.SQL("""
-            SELECT * FROM {table}
+            SELECT id, nome, idade, peso, altura, genero, objetivo, experiencia, dias_treino
+            FROM {table}
             WHERE (nome = %s OR email = %s) AND senha = %s
         """).format(table=sql.Identifier(NOME_TABELA)),
         (nome_ou_email, nome_ou_email, senha))
-        return cursor.fetchone()
+        return cursor.fetchone()  # Retorna os dados sem o e-mail
     except Exception as e:
         raise Exception(f"Erro ao obter usuário: {e}")
     finally:
@@ -117,7 +118,7 @@ def recuperar_por_email(email):
             SELECT nome, senha FROM {table}
             WHERE email = %s
         """).format(table=sql.Identifier(NOME_TABELA)), (email,))
-        return cursor.fetchone()
+        return cursor.fetchone()  # Retorna nome e senha, sem o email
     except Exception as e:
         raise Exception(f"Erro ao recuperar por email: {e}")
     finally:
