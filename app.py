@@ -1,5 +1,6 @@
 import streamlit as st
 st.set_page_config(page_title="Personal Trainer App", page_icon=":muscle:", layout="centered")
+
 from usuario import cadastrar, obter, atualizar, recuperar_por_email
 from treino import gerar_treino
 from calculos import (
@@ -46,7 +47,7 @@ def login():
             usuario = obter(nome, senha)
             if usuario:
                 st.session_state['usuario'] = usuario
-                st.toast(f"Bem-vindo(a), {usuario[1]}!", icon="🎉")
+                st.toast(f"Bem-vindo(a), {usuario['nome']}!", icon="🎉")
                 st.rerun()
             else:
                 st.error("Nome de usuário ou senha incorretos.")
@@ -75,27 +76,28 @@ def exibir_treino():
 
     usuario = st.session_state['usuario']
     
-    if usuario is None or len(usuario) < 10:
+    campos_obrigatorios = ['nome', 'idade', 'peso', 'altura', 'genero', 'objetivo', 'experiencia', 'dias_treino']
+    if any(campo not in usuario for campo in campos_obrigatorios):
         st.error("Dados do usuário estão incompletos. Faça login novamente.")
         st.stop()
 
-    st.title(f"Treino de {usuario[1]}")
+    st.title(f"Treino de {usuario['nome']}")
 
     tabs = st.tabs(["📋 Perfil", "🏋️ Treino", "⚙️ Configurações", "📊 Análises Corporais"])
 
     with tabs[0]:  # Perfil
         st.subheader("Informações do Usuário")
-        st.write(f"**Idade:** {usuario[3]} anos")
-        st.write(f"**Peso:** {usuario[4]} kg")
-        st.write(f"**Altura:** {usuario[5]} m")
-        st.write(f"**Gênero:** {usuario[6]}")
-        st.write(f"**Objetivo:** {usuario[7]}")
-        st.write(f"**Experiência:** {usuario[8]}")
-        st.write(f"**Dias de treino por semana:** {usuario[9]}")
+        st.write(f"**Idade:** {usuario['idade']} anos")
+        st.write(f"**Peso:** {usuario['peso']} kg")
+        st.write(f"**Altura:** {usuario['altura']} m")
+        st.write(f"**Gênero:** {usuario['genero']}")
+        st.write(f"**Objetivo:** {usuario['objetivo']}")
+        st.write(f"**Experiência:** {usuario['experiencia']}")
+        st.write(f"**Dias de treino por semana:** {usuario['dias_treino']}")
 
     with tabs[1]:  # Treino
         st.subheader("Plano de Treino")
-        treino = gerar_treino(usuario[7], usuario[8], usuario[9])
+        treino = gerar_treino(usuario['objetivo'], usuario['experiencia'], usuario['dias_treino'])
 
         progress = st.progress(0)
         for i in range(100):
@@ -110,17 +112,17 @@ def exibir_treino():
     with tabs[2]:  # Configurações
         st.subheader("Atualizar Dados")
         with st.form("form_atualizar"):
-            nome = st.text_input("Nome", value=usuario[1])
-            idade = st.number_input("Idade", min_value=10, max_value=100, value=usuario[3], step=1)
-            peso = st.number_input("Peso (kg)", min_value=30.0, max_value=300.0, value=usuario[4], step=0.1)
-            altura = st.number_input("Altura (m)", min_value=1.0, max_value=2.5, value=usuario[5], step=0.01)
-            genero = st.radio("Gênero", ("Masculino", "Feminino"), index=0 if usuario[6] == "Masculino" else 1)
-            objetivo = st.selectbox("Objetivo", ["Perda de peso", "Ganhar massa muscular", "Melhorar resistência"], index=["Perda de peso", "Ganhar massa muscular", "Melhorar resistência"].index(usuario[7]))
-            experiencia = st.selectbox("Experiência", ["Iniciante", "Intermediário", "Avançado"], index=["Iniciante", "Intermediário", "Avançado"].index(usuario[8]))
-            dias_treino = st.slider("Dias de treino por semana", 1, 7, value=usuario[9])
+            nome = st.text_input("Nome", value=usuario['nome'])
+            idade = st.number_input("Idade", min_value=10, max_value=100, value=usuario['idade'], step=1)
+            peso = st.number_input("Peso (kg)", min_value=30.0, max_value=300.0, value=usuario['peso'], step=0.1)
+            altura = st.number_input("Altura (m)", min_value=1.0, max_value=2.5, value=usuario['altura'], step=0.01)
+            genero = st.radio("Gênero", ("Masculino", "Feminino"), index=0 if usuario['genero'] == "Masculino" else 1)
+            objetivo = st.selectbox("Objetivo", ["Perda de peso", "Ganhar massa muscular", "Melhorar resistência"], index=["Perda de peso", "Ganhar massa muscular", "Melhorar resistência"].index(usuario['objetivo']))
+            experiencia = st.selectbox("Experiência", ["Iniciante", "Intermediário", "Avançado"], index=["Iniciante", "Intermediário", "Avançado"].index(usuario['experiencia']))
+            dias_treino = st.slider("Dias de treino por semana", 1, 7, value=usuario['dias_treino'])
 
             if st.form_submit_button("Salvar"):
-                atualizar(usuario[0], nome, idade, peso, altura, genero, objetivo, experiencia, dias_treino)
+                atualizar(usuario['id'], nome, idade, peso, altura, genero, objetivo, experiencia, dias_treino)
                 st.success("Dados atualizados! Atualize a página para ver as mudanças.")
                 st.rerun()
 
@@ -132,11 +134,11 @@ def exibir_treino():
     with tabs[3]:  # Análises Corporais
         st.subheader("Relatório Corporal")
 
-        peso = usuario[4]
-        altura = usuario[5]
-        idade = usuario[3]
-        genero = usuario[6]
-        objetivo = usuario[7]
+        peso = usuario['peso']
+        altura = usuario['altura']
+        idade = usuario['idade']
+        genero = usuario['genero']
+        objetivo = usuario['objetivo']
 
         imc, faixa_imc = calcular_imc(peso, altura)
         tmb = calcular_tmb(idade, peso, altura, genero)
@@ -177,7 +179,7 @@ def preencher_dados_usuario():
         objetivo = st.selectbox("Objetivo", ["Perda de peso", "Ganhar massa muscular", "Melhorar resistência"])
 
         if st.form_submit_button("Salvar"):
-            atualizar(usuario[0], usuario[1], idade, peso, altura, genero, objetivo, usuario[8], usuario[9])
+            atualizar(usuario['id'], usuario['nome'], idade, peso, altura, genero, objetivo, usuario['experiencia'], usuario['dias_treino'])
             st.success("Perfil atualizado com sucesso!")
             st.rerun()
 
