@@ -1,11 +1,7 @@
 import streamlit as st
 import pandas as pd
-from sqlalchemy import create_engine
 
-# Conectar ao banco de dados (ajustar para seu banco real)
-engine = create_engine('sqlite:///meu_banco.db')  # Substitua para o banco que você está utilizando
-
-# Função auxiliar para garantir a recuperação de dados com falhas seguras
+# Funções auxiliares para conversão segura
 def to_int(valor, default=0):
     try:
         return int(valor)
@@ -18,18 +14,32 @@ def to_float(valor, default=0.0):
     except (TypeError, ValueError):
         return default
 
-# Função para obter os dados do usuário no banco de dados
-def obter_usuario_por_id(usuario_id):
-    with engine.connect() as conn:
-        # Recuperar o usuário por ID
-        resultado = conn.execute(f"SELECT * FROM usuarios WHERE id = {usuario_id}")
-        usuario = resultado.fetchone()
-        if usuario:
-            return dict(usuario)
-        else:
-            return None
+# Simulação de banco de dados (exemplo com dicionário)
+# Aqui, você substitui com a consulta real ao banco de dados
+db_usuarios = {
+    1: {
+        "nome": "João",
+        "idade": 28,
+        "peso": 75,
+        "altura": 1.78,
+        "genero": "masculino",
+        "objetivo": "hipertrofia",
+        "experiencia": "intermediário",
+        "dias_treino": 4
+    },
+    2: {
+        "nome": "Maria",
+        "idade": 26,
+        "peso": 60,
+        "altura": 1.65,
+        "genero": "feminino",
+        "objetivo": "emagrecimento",
+        "experiencia": "iniciante",
+        "dias_treino": 3
+    }
+}
 
-# Função de treino que usa os dados recuperados
+# Função gerar_treino
 def gerar_treino(objetivo, experiencia, dias_treino):
     if objetivo == "hipertrofia":
         if experiencia == "iniciante":
@@ -105,14 +115,12 @@ def gerar_treino(objetivo, experiencia, dias_treino):
 
     return treino
 
-# Função para atualizar o banco de dados com os dados de treino (caso seja necessário)
-def atualizar_usuario(usuario_id, dias_treino):
-    with engine.connect() as conn:
-        # Atualiza os dados do usuário no banco
-        conn.execute(f"UPDATE usuarios SET dias_treino = {dias_treino} WHERE id = {usuario_id}")
+# Função para simular a recuperação do usuário no banco de dados
+def obter_usuario_por_id(usuario_id):
+    return db_usuarios.get(usuario_id, None)
 
-# Função para exibir o treino e informações do usuário
-def exibir_treino(usuario_id):
+# Função exibir_treino
+def exibir_treino(usuario_id, atualizar_func=lambda *args: None):
     usuario = obter_usuario_por_id(usuario_id)
     
     if not usuario:
@@ -130,17 +138,15 @@ def exibir_treino(usuario_id):
 
     st.header(f"Treino personalizado para {nome}")
 
-    # Formulário para editar os dados do treino
     with st.form("formulario_edicao"):
         novo_dias_treino = st.number_input("Dias de treino por semana", min_value=1, max_value=7, value=dias_treino)
         if st.form_submit_button("Salvar Alterações"):
-            # Atualiza os dados no banco de dados
-            atualizar_usuario(usuario_id, novo_dias_treino)
+            # Atualiza o banco de dados com as alterações
+            db_usuarios[usuario_id]["dias_treino"] = novo_dias_treino
             st.success("Perfil atualizado com sucesso!")
 
     treino = gerar_treino(objetivo, experiencia, novo_dias_treino)
 
-    # Exibindo as informações do usuário
     st.subheader("Dados do Usuário")
     st.markdown(f"""
     - **Idade:** {idade} anos  
@@ -154,7 +160,6 @@ def exibir_treino(usuario_id):
     st.divider()
     st.header("Treino por Grupo Muscular")
 
-    # Exibindo o treino gerado
     for musculo, dados in treino.items():
         with st.expander(f"{musculo}"):
             st.markdown(f"**Séries:** {dados['séries']} | **Repetições:** {dados['repetições']}")
