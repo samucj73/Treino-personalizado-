@@ -13,6 +13,11 @@ from calculos import (
     recomendacao_proteina
 )
 
+def splash_screen():
+    st.markdown("<h1 style='text-align: center;'>Personal Trainer App</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center;'>Seu treino, suas metas, sua evolução!</p>", unsafe_allow_html=True)
+    st.markdown("---")
+
 def cadastro():
     st.subheader("Cadastro de Novo Usuário")
     with st.form("cadastro_form"):
@@ -62,7 +67,7 @@ def recuperar_senha_form():
     if st.button("Recuperar Senha"):
         if email:
             try:
-                mensagem = recuperar_credencial(email)
+                mensagem = recuperar_por_email(email)
                 st.success(mensagem)
             except Exception as e:
                 st.error(f"Erro ao tentar recuperar a senha: {e}")
@@ -140,12 +145,11 @@ def exibir_treino():
         genero = usuario['genero']
         objetivo = usuario['objetivo']
 
-        imc, faixa_imc = calcular_imc(peso, altura)
-        tmb = calcular_tmb(idade, peso, altura, genero)
-
         circunferencia = st.number_input("Informe sua circunferência da cintura (cm)", min_value=30.0, max_value=200.0, step=0.1)
 
         if circunferencia:
+            imc, faixa_imc = calcular_imc(peso, altura)
+            tmb = calcular_tmb(idade, peso, altura, genero)
             gordura = calcular_percentual_gordura(peso, circunferencia, idade, genero)
             massa_magra = calcular_massa_muscular(peso, gordura)
             idade_metabolica = calcular_idade_metabolica(tmb, idade)
@@ -183,12 +187,12 @@ def preencher_dados_usuario():
             st.success("Perfil atualizado com sucesso!")
             st.rerun()
 
-# BLOCO PRINCIPAL AJUSTADO
+# BLOCO PRINCIPAL CORRIGIDO
 if __name__ == "__main__":
     if 'usuario' in st.session_state:
-        st.title("Personal Trainer App")
         exibir_treino()
     else:
+        splash_screen()
         st.title("Personal Trainer App")
         opcao = st.sidebar.selectbox("Escolha uma opção", ["Login", "Cadastro"])
         if opcao == "Login":
