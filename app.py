@@ -180,3 +180,14 @@ def preencher_dados_usuario():
             atualizar(usuario[0], usuario[1], idade, peso, altura, genero, objetivo, usuario[8], usuario[9])
             st.success("Perfil atualizado com sucesso!")
             st.rerun()
+        if __name__ == "__main__":
+    st.title("Personal Trainer App")
+
+    if 'usuario' in st.session_state:
+        exibir_treino()
+    else:
+        opcao = st.sidebar.selectbox("Escolha uma opção", ["Login", "Cadastro"])
+        if opcao == "Login":
+            login()
+        else:
+            cadastro()
