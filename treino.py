@@ -1,7 +1,7 @@
+
 import streamlit as st
 import pandas as pd
 
-# Funções auxiliares para conversão segura
 def to_int(valor, default=0):
     try:
         return int(valor)
@@ -14,7 +14,34 @@ def to_float(valor, default=0.0):
     except (TypeError, ValueError):
         return default
 
-# Função gerar_treino
+EXERCICIOS_E_EQUIPAMENTOS = {
+    "Supino reto com barra": "Banco reto + Barra olímpica",
+    "Supino inclinado com halteres": "Banco inclinado + Halteres",
+    "Crucifixo reto": "Banco reto + Halteres",
+    "Crossover no cabo": "Máquina de crossover (cabos)",
+    "Peck deck": "Máquina peck deck",
+    "Puxada frente aberta": "Máquina de puxada alta",
+    "Remada curvada": "Barra ou barra T",
+    "Remada unilateral com halteres": "Halter + banco",
+    "Remada baixa": "Máquina de remada baixa",
+    "Pulldown com pegada neutra": "Máquina ou puxador com pegada neutra",
+    "Agachamento livre": "Barra + Rack de agachamento",
+    "Leg press 45º": "Máquina de leg press",
+    "Cadeira extensora": "Máquina extensora",
+    "Mesa flexora": "Máquina flexora",
+    "Stiff com halteres": "Halteres",
+    "Desenvolvimento militar": "Máquina ou barra",
+    "Elevação lateral": "Halteres",
+    "Elevação frontal": "Halteres ou barra",
+    "Desenvolvimento Arnold": "Halteres",
+    "Crucifixo inverso na máquina": "Máquina peck deck reversa",
+    "Agachamento sumô com halteres": "Halter ou kettlebell",
+    "Elevação de quadril no banco": "Banco + peso livre",
+    "Afundo com halteres": "Halteres",
+    "Extensão de quadril no cabo": "Cabo com tornozeleira",
+    "Ponte de glúteo solo": "Peso corporal ou barra"
+}
+
 def gerar_treino(objetivo, experiencia, dias_treino):
     if objetivo == "hipertrofia":
         if experiencia == "iniciante":
@@ -30,84 +57,31 @@ def gerar_treino(objetivo, experiencia, dias_treino):
     else:
         series, reps = 3, "12-15"
 
-    treino = {
-        "Peito": {
-            "exercicios": [
-                "Supino reto com barra",
-                "Supino inclinado com halteres",
-                "Crucifixo reto",
-                "Crossover no cabo",
-                "Peck deck"
-            ],
-            "séries": series,
-            "repetições": reps
-        },
-        "Costas": {
-            "exercicios": [
-                "Puxada frente aberta",
-                "Remada curvada",
-                "Remada unilateral com halteres",
-                "Remada baixa",
-                "Pulldown com pegada neutra"
-            ],
-            "séries": series,
-            "repetições": reps
-        },
-        "Pernas": {
-            "exercicios": [
-                "Agachamento livre",
-                "Leg press 45º",
-                "Cadeira extensora",
-                "Mesa flexora",
-                "Stiff com halteres"
-            ],
-            "séries": series,
-            "repetições": reps
-        },
-        "Ombros": {
-            "exercicios": [
-                "Desenvolvimento militar",
-                "Elevação lateral",
-                "Elevação frontal",
-                "Desenvolvimento Arnold",
-                "Crucifixo inverso na máquina"
-            ],
-            "séries": series,
-            "repetições": reps
-        },
-        "Glúteos": {
-            "exercicios": [
-                "Agachamento sumô com halteres",
-                "Elevação de quadril no banco",
-                "Afundo com halteres",
-                "Extensão de quadril no cabo",
-                "Ponte de glúteo solo"
-            ],
-            "séries": series,
-            "repetições": reps
-        }
+    grupos = {
+        "A - Peito e Tríceps": ["Supino reto com barra", "Supino inclinado com halteres", "Crucifixo reto", "Peck deck", "Crossover no cabo"],
+        "B - Costas e Bíceps": ["Puxada frente aberta", "Remada curvada", "Remada unilateral com halteres", "Remada baixa", "Pulldown com pegada neutra"],
+        "C - Pernas e Glúteos": ["Agachamento livre", "Leg press 45º", "Cadeira extensora", "Mesa flexora", "Stiff com halteres"],
+        "D - Ombros e Abdômen": ["Desenvolvimento militar", "Elevação lateral", "Desenvolvimento Arnold", "Crucifixo inverso na máquina", "Elevação frontal"]
     }
 
-    # Aqui poderia haver lógica para distribuir os exercícios entre os dias de treino
-    treino_dividido = dividir_treino_por_dia(treino, dias_treino)
+    dias_disponiveis = list(grupos.items())[:dias_treino]
 
-    return treino_dividido
-
-def dividir_treino_por_dia(treino, dias_treino):
     treino_dividido = {}
-    musculos = list(treino.keys())
-
-    for i, musculo in enumerate(musculos):
-        treino_dividido[musculo] = {
-            "exercicios": treino[musculo]["exercicios"],
-            "séries": treino[musculo]["séries"],
-            "repetições": treino[musculo]["repetições"]
+    for dia_nome, exercicios in dias_disponiveis:
+        treino_dividido[dia_nome] = {
+            "séries": series,
+            "repetições": reps,
+            "exercicios": [
+                {
+                    "nome": ex,
+                    "equipamento": EXERCICIOS_E_EQUIPAMENTOS.get(ex, "Equipamento não especificado")
+                }
+                for ex in exercicios
+            ]
         }
-    
-    # Aqui pode-se fazer uma distribuição mais sofisticada dos treinos por dias
+
     return treino_dividido
 
-# Função exibir_treino
 def exibir_treino(usuario, atualizar_func=lambda *args: None):
     nome = usuario[1]
     idade = to_int(usuario[3], default=25)
@@ -129,33 +103,34 @@ def exibir_treino(usuario, atualizar_func=lambda *args: None):
     treino = gerar_treino(objetivo, experiencia, novo_dias_treino)
 
     st.subheader("Dados do Usuário")
-    st.markdown(f"""
+    st.markdown(f'''
     - **Idade:** {idade} anos  
     - **Peso:** {peso:.1f} kg  
     - **Altura:** {altura:.2f} m  
     - **Gênero:** {genero.capitalize()}  
     - **Objetivo:** {objetivo.capitalize()}  
     - **Experiência:** {experiencia.capitalize()}  
-    """)
+    ''')
 
     st.divider()
-    st.header("Treino por Grupo Muscular")
+    st.header("Treino por Dia")
 
-    for musculo, dados in treino.items():
-        with st.expander(f"{musculo}"):
+    for grupo, dados in treino.items():
+        with st.expander(grupo):
             st.markdown(f"**Séries:** {dados['séries']} | **Repetições:** {dados['repetições']}")
             for i, ex in enumerate(dados["exercicios"], start=1):
-                st.markdown(f"{i}. {ex}")
+                st.markdown(f"{i}. **{ex['nome']}**  
+> Equipamento: *{ex['equipamento']}*")
 
     st.divider()
     st.subheader("Orientações Gerais")
-    st.markdown(f"""
+    st.markdown('''
     - **Aquecimento:** Faça 5 a 10 minutos antes do treino.  
     - **Descanso entre séries:** 30s a 90s dependendo da intensidade.  
     - **Alongamento:** Recomendado após o treino.  
     - **Progresso:** Aumente a carga gradualmente com técnica adequada.  
     - Consulte um profissional para ajustes personalizados.
-    """)
+    ''')
 
 # Exemplo para teste local
 usuario = [1, "João", "joao@email.com", "28", 75, 1.78, "masculino", "hipertrofia", "intermediário", 4]
