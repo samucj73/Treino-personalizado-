@@ -193,7 +193,7 @@ if __name__ == "__main__":
         exibir_treino()
     else:
         splash_screen()
-        st.title("🏋️🏋️‍♀️",layout="centered")
+        st.markdown("<h1 style='text-align: center;'>🏋️🏋️‍♀️</h1>", unsafe_allow_html=True)
         opcao = st.sidebar.selectbox("Escolha uma opção", ["Login", "Cadastro"])
         if opcao == "Login":
             login()
