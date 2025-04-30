@@ -72,7 +72,7 @@ def cadastrar_usuario(nome, email, senha, idade, peso, altura, genero, objetivo,
         cursor.close()
         conn.close()
 
-# Obter usuário por nome ou email e senha
+# Obter usuário por nome ou email e senha — CORRIGIDO para retornar dicionário
 def obter_usuario(nome_ou_email, senha):
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -83,7 +83,13 @@ def obter_usuario(nome_ou_email, senha):
             WHERE (nome = %s OR email = %s) AND senha = %s
         """).format(table=sql.Identifier(NOME_TABELA)),
         (nome_ou_email, nome_ou_email, senha))
-        return cursor.fetchone()  # Retorna os dados sem o e-mail
+        
+        row = cursor.fetchone()
+        if row:
+            keys = ["id", "nome", "idade", "peso", "altura", "genero", "objetivo", "experiencia", "dias_treino"]
+            return dict(zip(keys, row))
+        else:
+            return None
     except Exception as e:
         raise Exception(f"Erro ao obter usuário: {e}")
     finally:
@@ -118,7 +124,7 @@ def recuperar_por_email(email):
             SELECT nome, senha FROM {table}
             WHERE email = %s
         """).format(table=sql.Identifier(NOME_TABELA)), (email,))
-        return cursor.fetchone()  # Retorna nome e senha, sem o email
+        return cursor.fetchone()
     except Exception as e:
         raise Exception(f"Erro ao recuperar por email: {e}")
     finally:
