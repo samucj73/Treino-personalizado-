@@ -175,9 +175,38 @@ def preencher_dados_usuario():
         altura = st.number_input("Altura (m)", min_value=1.0, max_value=2.5, step=0.01)
         genero = st.radio("Gênero", ("Masculino", "Feminino"))
         objetivo = st.selectbox("Objetivo", ["Perda de peso", "Ganhar massa muscular", "Melhorar resistência"])
+        experiencia = st.selectbox("Nível de experiência", ["Iniciante", "Intermediário", "Avançado"])
+        dias_treino = st.slider("Dias disponíveis para treino na semana", 1, 7, 3)
 
         if st.form_submit_button("Salvar"):
-            atualizar(usuario[0], usuario[1], idade, peso, altura, genero, objetivo, usuario[8], usuario[9])
-            st.success("Perfil atualizado com sucesso!")
+            atualizar(usuario[0], usuario[1], idade, peso, altura, genero, objetivo, experiencia, dias_treino)
+            st.success("Perfil atualizado!")
             st.rerun()
-        
+
+def main():
+    criar_tabela_no_inicio()
+
+    if 'usuario' not in st.session_state:
+        menu = st.sidebar.radio("Menu", ["Login", "Cadastro"])
+
+        if menu == "Login":
+            login()
+        else:
+            cadastro()
+    else:
+        usuario = st.session_state['usuario']
+
+        if len(usuario) > 3 and (usuario[3] is None or usuario[3] == 0):
+            preencher_dados_usuario()
+        else:
+            exibir_treino()
+
+def criar_tabela_no_inicio():
+    from db import criar_tabela
+    try:
+        criar_tabela()
+    except Exception as e:
+        st.error(f"Erro ao criar a tabela: {e}")
+
+if __name__ == "__main__":
+    main()
