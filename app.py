@@ -174,7 +174,7 @@ def preencher_dados_usuario():
         peso = st.number_input("Peso (kg)", min_value=30.0, max_value=300.0, step=0.1)
         altura = st.number_input("Altura (m)", min_value=1.0, max_value=2.5, step=0.01)
         genero = st.radio("Gênero", ("Masculino", "Feminino"))
-                objetivo = st.selectbox("Objetivo", ["Perda de peso", "Ganhar massa muscular", "Melhorar resistência"])
+        objetivo = st.selectbox("Objetivo", ["Perda de peso", "Ganhar massa muscular", "Melhorar resistência"])
 
         if st.form_submit_button("Salvar"):
             atualizar(usuario[0], usuario[1], idade, peso, altura, genero, objetivo, usuario[8], usuario[9])
