@@ -1,7 +1,11 @@
 import streamlit as st
 import pandas as pd
+from sqlalchemy import create_engine
 
-# Funções auxiliares para conversão segura
+# Conectar ao banco de dados (ajustar para seu banco real)
+engine = create_engine('sqlite:///meu_banco.db')  # Substitua para o banco que você está utilizando
+
+# Função auxiliar para garantir a recuperação de dados com falhas seguras
 def to_int(valor, default=0):
     try:
         return int(valor)
@@ -14,7 +18,18 @@ def to_float(valor, default=0.0):
     except (TypeError, ValueError):
         return default
 
-# Função gerar_treino
+# Função para obter os dados do usuário no banco de dados
+def obter_usuario_por_id(usuario_id):
+    with engine.connect() as conn:
+        # Recuperar o usuário por ID
+        resultado = conn.execute(f"SELECT * FROM usuarios WHERE id = {usuario_id}")
+        usuario = resultado.fetchone()
+        if usuario:
+            return dict(usuario)
+        else:
+            return None
+
+# Função de treino que usa os dados recuperados
 def gerar_treino(objetivo, experiencia, dias_treino):
     if objetivo == "hipertrofia":
         if experiencia == "iniciante":
@@ -88,46 +103,44 @@ def gerar_treino(objetivo, experiencia, dias_treino):
         }
     }
 
-    # Aqui poderia haver lógica para distribuir os exercícios entre os dias de treino
-    treino_dividido = dividir_treino_por_dia(treino, dias_treino)
+    return treino
 
-    return treino_dividido
+# Função para atualizar o banco de dados com os dados de treino (caso seja necessário)
+def atualizar_usuario(usuario_id, dias_treino):
+    with engine.connect() as conn:
+        # Atualiza os dados do usuário no banco
+        conn.execute(f"UPDATE usuarios SET dias_treino = {dias_treino} WHERE id = {usuario_id}")
 
-def dividir_treino_por_dia(treino, dias_treino):
-    treino_dividido = {}
-    musculos = list(treino.keys())
-
-    for i, musculo in enumerate(musculos):
-        treino_dividido[musculo] = {
-            "exercicios": treino[musculo]["exercicios"],
-            "séries": treino[musculo]["séries"],
-            "repetições": treino[musculo]["repetições"]
-        }
+# Função para exibir o treino e informações do usuário
+def exibir_treino(usuario_id):
+    usuario = obter_usuario_por_id(usuario_id)
     
-    # Aqui pode-se fazer uma distribuição mais sofisticada dos treinos por dias
-    return treino_dividido
+    if not usuario:
+        st.error("Usuário não encontrado.")
+        return
 
-# Função exibir_treino
-def exibir_treino(usuario, atualizar_func=lambda *args: None):
-    nome = usuario[1]
-    idade = to_int(usuario[3], default=25)
-    peso = to_float(usuario[4], default=70.0)
-    altura = to_float(usuario[5], default=1.70)
-    genero = usuario[6]
-    objetivo = usuario[7]
-    experiencia = usuario[8]
-    dias_treino = to_int(usuario[9], default=3)
+    nome = usuario["nome"]
+    idade = usuario["idade"]
+    peso = usuario["peso"]
+    altura = usuario["altura"]
+    genero = usuario["genero"]
+    objetivo = usuario["objetivo"]
+    experiencia = usuario["experiencia"]
+    dias_treino = usuario["dias_treino"]
 
     st.header(f"Treino personalizado para {nome}")
 
+    # Formulário para editar os dados do treino
     with st.form("formulario_edicao"):
         novo_dias_treino = st.number_input("Dias de treino por semana", min_value=1, max_value=7, value=dias_treino)
         if st.form_submit_button("Salvar Alterações"):
-            atualizar_func(nome, idade, peso, altura, genero, objetivo, experiencia, novo_dias_treino)
+            # Atualiza os dados no banco de dados
+            atualizar_usuario(usuario_id, novo_dias_treino)
             st.success("Perfil atualizado com sucesso!")
 
     treino = gerar_treino(objetivo, experiencia, novo_dias_treino)
 
+    # Exibindo as informações do usuário
     st.subheader("Dados do Usuário")
     st.markdown(f"""
     - **Idade:** {idade} anos  
@@ -141,6 +154,7 @@ def exibir_treino(usuario, atualizar_func=lambda *args: None):
     st.divider()
     st.header("Treino por Grupo Muscular")
 
+    # Exibindo o treino gerado
     for musculo, dados in treino.items():
         with st.expander(f"{musculo}"):
             st.markdown(f"**Séries:** {dados['séries']} | **Repetições:** {dados['repetições']}")
@@ -158,5 +172,5 @@ def exibir_treino(usuario, atualizar_func=lambda *args: None):
     """)
 
 # Exemplo para teste local
-usuario = [1, "João", "joao@email.com", "28", 75, 1.78, "masculino", "hipertrofia", "intermediário", 4]
-exibir_treino(usuario)
+usuario_id = 1  # Simula a busca de um usuário específico no banco de dados
+exibir_treino(usuario_id)
