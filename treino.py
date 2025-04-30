@@ -14,31 +14,6 @@ def to_float(valor, default=0.0):
     except (TypeError, ValueError):
         return default
 
-# Simulação de banco de dados (exemplo com dicionário)
-# Aqui, você substitui com a consulta real ao banco de dados
-db_usuarios = {
-    1: {
-        "nome": "João",
-        "idade": 28,
-        "peso": 75,
-        "altura": 1.78,
-        "genero": "masculino",
-        "objetivo": "hipertrofia",
-        "experiencia": "intermediário",
-        "dias_treino": 4
-    },
-    2: {
-        "nome": "Maria",
-        "idade": 26,
-        "peso": 60,
-        "altura": 1.65,
-        "genero": "feminino",
-        "objetivo": "emagrecimento",
-        "experiencia": "iniciante",
-        "dias_treino": 3
-    }
-}
-
 # Função gerar_treino
 def gerar_treino(objetivo, experiencia, dias_treino):
     if objetivo == "hipertrofia":
@@ -113,36 +88,42 @@ def gerar_treino(objetivo, experiencia, dias_treino):
         }
     }
 
-    return treino
+    # Aqui poderia haver lógica para distribuir os exercícios entre os dias de treino
+    treino_dividido = dividir_treino_por_dia(treino, dias_treino)
 
-# Função para simular a recuperação do usuário no banco de dados
-def obter_usuario_por_id(usuario_id):
-    return db_usuarios.get(usuario_id, None)
+    return treino_dividido
+
+def dividir_treino_por_dia(treino, dias_treino):
+    treino_dividido = {}
+    musculos = list(treino.keys())
+
+    for i, musculo in enumerate(musculos):
+        treino_dividido[musculo] = {
+            "exercicios": treino[musculo]["exercicios"],
+            "séries": treino[musculo]["séries"],
+            "repetições": treino[musculo]["repetições"]
+        }
+    
+    # Aqui pode-se fazer uma distribuição mais sofisticada dos treinos por dias
+    return treino_dividido
 
 # Função exibir_treino
-def exibir_treino(usuario_id, atualizar_func=lambda *args: None):
-    usuario = obter_usuario_por_id(usuario_id)
-    
-    if not usuario:
-        st.error("Usuário não encontrado.")
-        return
-
-    nome = usuario["nome"]
-    idade = usuario["idade"]
-    peso = usuario["peso"]
-    altura = usuario["altura"]
-    genero = usuario["genero"]
-    objetivo = usuario["objetivo"]
-    experiencia = usuario["experiencia"]
-    dias_treino = usuario["dias_treino"]
+def exibir_treino(usuario, atualizar_func=lambda *args: None):
+    nome = usuario[1]
+    idade = to_int(usuario[3], default=25)
+    peso = to_float(usuario[4], default=70.0)
+    altura = to_float(usuario[5], default=1.70)
+    genero = usuario[6]
+    objetivo = usuario[7]
+    experiencia = usuario[8]
+    dias_treino = to_int(usuario[9], default=3)
 
     st.header(f"Treino personalizado para {nome}")
 
     with st.form("formulario_edicao"):
         novo_dias_treino = st.number_input("Dias de treino por semana", min_value=1, max_value=7, value=dias_treino)
         if st.form_submit_button("Salvar Alterações"):
-            # Atualiza o banco de dados com as alterações
-            db_usuarios[usuario_id]["dias_treino"] = novo_dias_treino
+            atualizar_func(nome, idade, peso, altura, genero, objetivo, experiencia, novo_dias_treino)
             st.success("Perfil atualizado com sucesso!")
 
     treino = gerar_treino(objetivo, experiencia, novo_dias_treino)
@@ -177,5 +158,5 @@ def exibir_treino(usuario_id, atualizar_func=lambda *args: None):
     """)
 
 # Exemplo para teste local
-usuario_id = 1  # Simula a busca de um usuário específico no banco de dados
-exibir_treino(usuario_id)
+usuario = [1, "João", "joao@email.com", "28", 75, 1.78, "masculino", "hipertrofia", "intermediário", 4]
+exibir_treino(usuario)
