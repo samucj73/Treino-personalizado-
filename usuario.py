@@ -24,7 +24,7 @@ def recuperar_senha(email):
     try:
         usuario = recuperar_por_email(email)
         if usuario:
-            return f"Usuário encontrado: {usuario[1]} - Sua senha é: {usuario[2]}"
+            return f"Usuário encontrado: {usuario[0]} - Sua senha é: {usuario[1]}"
         else:
             raise ValueError("E-mail não encontrado.")
     except Exception as e:
