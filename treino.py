@@ -175,6 +175,4 @@ def exibir_treino(usuario, atualizar_func=lambda *args: None):
     - Consulte um profissional para ajustes personalizados.
     ''')
 
-# Teste local
-usuario = [1, "João", "joao@email.com", "28", 75, 1.78, "masculino", "hipertrofia", "intermediário", 6]
-exibir_treino(usuario)
+
