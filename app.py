@@ -180,7 +180,7 @@ def rodape():
     st.markdown("""
         <hr style="margin-top: 50px; margin-bottom: 10px;">
         <div style="text-align: center; color: gray; font-size: 0.9em;">
-            Desenvolvido por SeuNome • Personal Trainer App © 2025
+            Desenvolvido por Samucj Technology © 2025
         </div>
     """, unsafe_allow_html=True)
 
