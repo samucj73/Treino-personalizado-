@@ -1,58 +1,37 @@
 import random
-from exercicios import exercicios_por_grupo
+from exercicios import exercicios
 
 def gerar_treino_personalizado(objetivo, experiencia, dias_treino):
-    grupos = list(exercicios_por_grupo.keys())
-    treino = {}
+    treino_final = {}
 
-    grupos_por_dia = dividir_grupos(grupos, dias_treino)
+    grupos = list(exercicios.keys())
+    num_grupos = len(grupos)
+    grupos_selecionados = grupos[:]
 
     for i in range(dias_treino):
-        dia = f"Dia {i+1}"
-        treino[dia] = []
+        grupo = grupos_selecionados[i % num_grupos]
+        nivel = experiencia
 
-        for grupo in grupos_por_dia[i]:
-            exercicios = exercicios_por_grupo[grupo]
-            qtd = definir_qtd_exercicios(experiencia)
-            selecionados = random.sample(exercicios, min(qtd, len(exercicios)))
+        if nivel not in exercicios[grupo]:
+            continue
 
-            for ex in selecionados:
-                treino[dia].append({
-                    "nome": ex["nome"],
-                    "series": definir_series(objetivo),
-                    "repeticoes": definir_repeticoes(objetivo),
-                    "equipamento": ex["equipamento"]
-                })
+        lista_exercicios = exercicios[grupo][nivel]
+        num_exercicios = min(3, len(lista_exercicios))
+        selecionados = random.sample(lista_exercicios, num_exercicios)
 
-    return treino
+        treino_final[f"Dia {i+1} - {grupo.title()}"] = []
+        for nome, series, repeticoes, equipamento in selecionados:
+            treino_final[f"Dia {i+1} - {grupo.title()}"].append({
+                "nome": nome,
+                "series": series,
+                "repeticoes": repeticoes,
+                "equipamento": equipamento
+            })
 
-def dividir_grupos(grupos, dias):
-    random.shuffle(grupos)
-    grupos_por_dia = [[] for _ in range(dias)]
-    for i, grupo in enumerate(grupos):
-        grupos_por_dia[i % dias].append(grupo)
-    return grupos_por_dia
+    return treino_final
 
-def definir_qtd_exercicios(experiencia):
-    if experiencia == "Iniciante":
-        return 4
-    elif experiencia == "Intermediário":
-        return 6
-    else:
-        return 8
-
-def definir_series(objetivo):
-    if objetivo == "Perda de peso":
-        return 3
-    elif objetivo == "Ganhar massa muscular":
-        return 4
-    else:  # Resistência
-        return 2
-
-def definir_repeticoes(objetivo):
-    if objetivo == "Perda de peso":
-        return 15
-    elif objetivo == "Ganhar massa muscular":
-        return 10
-    else:
-        return 20
+def exibir_treino(treino):
+    for dia, exercicios_dia in treino.items():
+        print(f"\n{dia}")
+        for ex in exercicios_dia:
+            print(f"- {ex['nome']} | Séries: {ex['series']} | Repetições: {ex['repeticoes']} | Equipamento: {ex['equipamento']}")
