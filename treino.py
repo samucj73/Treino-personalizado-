@@ -1,37 +1,34 @@
+# treino.py
+
 import random
-from exercicios import exercicios
+from exercicios import exercicios_por_grupo
 
-def gerar_treino_personalizado(objetivo, experiencia, dias_treino):
-    treino_final = {}
+def filtrar_exercicios_por_experiencia(lista, experiencia):
+    if experiencia == "iniciante":
+        return lista[:4]
+    elif experiencia == "intermediário":
+        return lista[:6]
+    elif experiencia == "avançado":
+        return lista
+    else:
+        return lista
 
-    grupos = list(exercicios.keys())
-    num_grupos = len(grupos)
-    grupos_selecionados = grupos[:]
+def gerar_treino_personalizado(grupos_musculares, dias_treino, experiencia, objetivo):
+    plano_treino = {}
 
-    for i in range(dias_treino):
-        grupo = grupos_selecionados[i % num_grupos]
-        nivel = experiencia
+    # Define número total de sessões com base em dias_treino
+    num_dias = dias_treino
+    grupos_selecionados = grupos_musculares if grupos_musculares else list(exercicios_por_grupo.keys())
 
-        if nivel not in exercicios[grupo]:
-            continue
+    grupos_por_dia = max(1, len(grupos_selecionados) // num_dias)
+    grupos_divididos = [grupos_selecionados[i:i + grupos_por_dia] for i in range(0, len(grupos_selecionados), grupos_por_dia)]
 
-        lista_exercicios = exercicios[grupo][nivel]
-        num_exercicios = min(3, len(lista_exercicios))
-        selecionados = random.sample(lista_exercicios, num_exercicios)
+    for dia, grupos in enumerate(grupos_divididos, start=1):
+        exercicios_dia = []
+        for grupo in grupos:
+            todos_exercicios = exercicios_por_grupo.get(grupo, [])
+            selecionados = filtrar_exercicios_por_experiencia(todos_exercicios, experiencia)
+            exercicios_dia.extend(random.sample(selecionados, min(len(selecionados), 2)))
+        plano_treino[f"Dia {dia}"] = exercicios_dia
 
-        treino_final[f"Dia {i+1} - {grupo.title()}"] = []
-        for nome, series, repeticoes, equipamento in selecionados:
-            treino_final[f"Dia {i+1} - {grupo.title()}"].append({
-                "nome": nome,
-                "series": series,
-                "repeticoes": repeticoes,
-                "equipamento": equipamento
-            })
-
-    return treino_final
-
-def exibir_treino(treino):
-    for dia, exercicios_dia in treino.items():
-        print(f"\n{dia}")
-        for ex in exercicios_dia:
-            print(f"- {ex['nome']} | Séries: {ex['series']} | Repetições: {ex['repeticoes']} | Equipamento: {ex['equipamento']}")
+    return plano_treino
