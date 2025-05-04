@@ -67,7 +67,7 @@ def recuperar_senha_form():
     if st.button("Recuperar Senha"):
         if email:
             try:
-                mensagem = recuperar_por_email(email)
+                mensagem = recuperar_senha(email)
                 st.success(mensagem)
             except Exception as e:
                 st.error(f"Erro ao tentar recuperar a senha: {e}")
@@ -80,17 +80,12 @@ def exibir_treino():
         st.stop()
 
     usuario = st.session_state['usuario']
-    
-    campos_obrigatorios = ['nome', 'idade', 'peso', 'altura', 'genero', 'objetivo', 'experiencia', 'dias_treino']
-    if any(campo not in usuario for campo in campos_obrigatorios):
-        st.error("Dados do usuário estão incompletos. Faça login novamente.")
-        st.stop()
 
     st.title(f"Treino de {usuario['nome']}")
 
     tabs = st.tabs(["📋 Perfil", "🏋️ Treino", "⚙️ Configurações", "📊 Análises Corporais"])
 
-    with tabs[0]:  # Perfil
+    with tabs[0]:
         st.subheader("Informações do Usuário")
         st.write(f"**Idade:** {usuario['idade']} anos")
         st.write(f"**Peso:** {usuario['peso']} kg")
@@ -100,7 +95,7 @@ def exibir_treino():
         st.write(f"**Experiência:** {usuario['experiencia']}")
         st.write(f"**Dias de treino por semana:** {usuario['dias_treino']}")
 
-    with tabs[1]:  # Treino
+    with tabs[1]:
         st.subheader("Plano de Treino")
 
         try:
@@ -125,7 +120,7 @@ def exibir_treino():
         except Exception as e:
             st.error(f"Erro ao gerar treino: {e}")
 
-    with tabs[2]:  # Configurações
+    with tabs[2]:
         st.subheader("Atualizar Dados")
         with st.form("form_atualizar"):
             nome = st.text_input("Nome", value=usuario['nome'])
@@ -139,7 +134,7 @@ def exibir_treino():
 
             if st.form_submit_button("Salvar"):
                 atualizar(usuario['id'], nome, idade, peso, altura, genero, objetivo, experiencia, dias_treino)
-                st.success("Dados atualizados! Atualize a página para ver as mudanças.")
+                st.success("Dados atualizados!")
                 st.rerun()
 
         if st.button("Sair da Conta"):
@@ -147,7 +142,7 @@ def exibir_treino():
             st.success("Sessão encerrada!")
             st.rerun()
 
-    with tabs[3]:  # Análises Corporais
+    with tabs[3]:
         st.subheader("Relatório Corporal")
 
         peso = usuario['peso']
@@ -177,13 +172,12 @@ def exibir_treino():
         else:
             st.info("Informe a circunferência da cintura para visualizar as análises completas.")
 
-# BLOCO PRINCIPAL
+# Execução principal
 if __name__ == "__main__":
     if 'usuario' in st.session_state:
         exibir_treino()
     else:
         splash_screen()
-        st.markdown("### Acesse sua conta para começar.")
         login()
         st.markdown("---")
         cadastro()
