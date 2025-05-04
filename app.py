@@ -102,17 +102,20 @@ def exibir_treino():
 
     with tabs[1]:  # Treino
         st.subheader("Plano de Treino")
-        treino = gerar_treino(usuario['objetivo'], usuario['experiencia'], usuario['dias_treino'])
+        try:
+            treino = gerar_treino_personalizado(usuario['objetivo'], usuario['experiencia'], usuario['dias_treino'])
+            
+            progress = st.progress(0)
+            for i in range(100):
+                progress.progress(i + 1)
+            st.success("Treino carregado!")
 
-        progress = st.progress(0)
-        for i in range(100):
-            progress.progress(i + 1)
-        st.success("Treino carregado!")
-
-        for dia, exercicios in treino.items():
-            with st.expander(dia):
-                for exercicio in exercicios:
-                    st.write(f"- {exercicio}")
+            for exercicio in treino:
+                st.write(f"- **{exercicio['exercicio']}**")
+                st.write(f"  - Séries: {exercicio['series']} | Repetições: {exercicio['repeticoes']} | Equipamento: {exercicio['equipamento']}")
+                st.write("---")
+        except Exception as e:
+            st.error(f"Erro ao gerar treino: {e}")
 
     with tabs[2]:  # Configurações
         st.subheader("Atualizar Dados")
