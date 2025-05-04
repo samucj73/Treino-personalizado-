@@ -1,3 +1,4 @@
+
 import streamlit as st
 st.set_page_config(page_title="Personal Trainer App", page_icon=":muscle:", layout="centered")
 
@@ -155,9 +156,11 @@ def exibir_treino():
         genero = usuario['genero']
         objetivo = usuario['objetivo']
 
-        circunferencia = st.number_input("Informe sua circunferência da cintura (cm)", min_value=30.0, max_value=200.0, step=0.1)
+        with st.form("form_analise_corporal"):
+            circunferencia = st.number_input("Informe sua circunferência da cintura (cm)", min_value=30.0, max_value=200.0, step=0.1)
+            calcular = st.form_submit_button("Calcular Análises Corporais")
 
-        if circunferencia:
+        if calcular:
             imc, faixa_imc = calcular_imc(peso, altura)
             tmb = calcular_tmb(idade, peso, altura, genero)
             gordura = calcular_percentual_gordura(peso, circunferencia, idade, genero)
@@ -173,8 +176,6 @@ def exibir_treino():
             st.markdown(f"**Idade Metabólica Estimada:** {idade_metabolica:.0f} anos")
             st.markdown(f"**Hidratação Recomendada:** {agua:.0f} ml por dia")
             st.markdown(f"**Proteína Diária Recomendada:** {proteina:.2f} g")
-        else:
-            st.info("Informe a circunferência da cintura para visualizar as análises completas.")
 
 def rodape():
     st.markdown("""
