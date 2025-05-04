@@ -18,14 +18,6 @@ def splash_screen():
     st.markdown("<p style='text-align: center;'>Seu treino, suas metas, sua evolução!</p>", unsafe_allow_html=True)
     st.markdown("---")
 
-def rodape():
-    st.markdown("""
-        <hr style="margin-top: 50px; margin-bottom: 10px;">
-        <div style="text-align: center; color: gray; font-size: 0.9em;">
-            Desenvolvido por SeuNome • Personal Trainer App © 2025
-        </div>
-    """, unsafe_allow_html=True)
-
 def cadastro():
     st.subheader("Cadastro de Novo Usuário")
     with st.form("cadastro_form"):
@@ -67,6 +59,10 @@ def login():
 
     if st.button("Esqueceu a senha?"):
         recuperar_senha_form()
+
+    if st.button("Cadastrar novo usuário"):
+        st.session_state['mostrar_cadastro'] = True
+        st.rerun()
 
 def recuperar_senha_form():
     st.subheader("Recuperação de Senha")
@@ -180,20 +176,26 @@ def exibir_treino():
         else:
             st.info("Informe a circunferência da cintura para visualizar as análises completas.")
 
-# Execução principal
-if __name__ == "__main__":
-    if 'usuario' in st.session_state:
-        exibir_treino()
-    else:
-        splash_screen()
-        login()
-        if st.button("Quero me cadastrar"):
-            cadastro()
-        rodape()
-        def rodape():
+def rodape():
     st.markdown("""
         <hr style="margin-top: 50px; margin-bottom: 10px;">
         <div style="text-align: center; color: gray; font-size: 0.9em;">
             Desenvolvido por SeuNome • Personal Trainer App © 2025
         </div>
     """, unsafe_allow_html=True)
+
+# Execução principal
+if __name__ == "__main__":
+    if 'usuario' in st.session_state:
+        exibir_treino()
+    elif 'mostrar_cadastro' in st.session_state and st.session_state['mostrar_cadastro']:
+        splash_screen()
+        cadastro()
+        if st.button("Voltar para login"):
+            st.session_state['mostrar_cadastro'] = False
+            st.rerun()
+    else:
+        splash_screen()
+        login()
+
+    rodape()
