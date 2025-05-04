@@ -102,19 +102,26 @@ def exibir_treino():
 
     with tabs[1]:  # Treino
         st.subheader("Plano de Treino")
+
         try:
-            # Ajuste aqui, levando em consideração o objetivo
-            treino = gerar_treino_personalizado(usuario['objetivo'], usuario['experiencia'], usuario['dias_treino'])
-            
+            treino = gerar_treino_personalizado(
+                objetivo=usuario['objetivo'],
+                experiencia=usuario['experiencia'],
+                dias_treino=usuario['dias_treino']
+            )
+
             progress = st.progress(0)
             for i in range(100):
                 progress.progress(i + 1)
             st.success("Treino carregado!")
 
-            for exercicio in treino:
-                st.write(f"- **{exercicio['exercicio']}**")
-                st.write(f"  - Séries: {exercicio['series']} | Repetições: {exercicio['repeticoes']} | Equipamento: {exercicio['equipamento']}")
-                st.write("---")
+            for dia, exercicios in treino.items():
+                with st.expander(dia):
+                    for ex in exercicios:
+                        st.markdown(f"**{ex['nome']}**")
+                        st.write(f"- Séries: {ex['series']}")
+                        st.write(f"- Repetições: {ex['repeticoes']}")
+                        st.write(f"- Equipamento: {ex['equipamento']}")
         except Exception as e:
             st.error(f"Erro ao gerar treino: {e}")
 
@@ -170,31 +177,13 @@ def exibir_treino():
         else:
             st.info("Informe a circunferência da cintura para visualizar as análises completas.")
 
-def preencher_dados_usuario():
-    st.title("Complete seu Perfil")
-
-    if 'usuario' not in st.session_state:
-        st.error("Sessão expirada. Faça login novamente.")
-        st.stop()
-
-    usuario = st.session_state['usuario']
-
-    with st.form("form_completar_perfil"):
-        idade = st.number_input("Idade", min_value=10, max_value=100, step=1)
-        peso = st.number_input("Peso (kg)", min_value=30.0, max_value=300.0, step=0.1)
-        altura = st.number_input("Altura (m)", min_value=1.0, max_value=2.5, step=0.01)
-        genero = st.radio("Gênero", ("Masculino", "Feminino"))
-        objetivo = st.selectbox("Objetivo", ["Perda de peso", "Ganhar massa muscular", "Melhorar resistência"])
-
-        if st.form_submit_button("Salvar"):
-            atualizar(usuario['id'], usuario['nome'], idade, peso, altura, genero, objetivo, usuario['experiencia'], usuario['dias_treino'])
-            st.success("Perfil atualizado com sucesso!")
-            st.rerun()
-
-# BLOCO PRINCIPAL CORRIGIDO
+# BLOCO PRINCIPAL
 if __name__ == "__main__":
     if 'usuario' in st.session_state:
         exibir_treino()
     else:
         splash_screen()
-        st.markdown("<h1
+        st.markdown("### Acesse sua conta para começar.")
+        login()
+        st.markdown("---")
+        cadastro()
