@@ -1,31 +1,31 @@
-from db import cadastrar_usuario, obter_usuario, atualizar_usuario, recuperar_por_email
+# usuario.py
 
-def cadastrar(nome, email, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino):
-    try:
-        if not nome or not email or not senha:
-            raise ValueError("Nome, e-mail e senha são obrigatórios.")
-        cadastrar_usuario(nome, email, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino)
-    except Exception as e:
-        raise Exception(f"Erro ao cadastrar: {e}")
+usuarios = {}
 
-def obter(nome_ou_email, senha):
-    try:
-        return obter_usuario(nome_ou_email, senha)
-    except Exception as e:
-        raise Exception(f"Erro ao obter usuário: {e}")
+def cadastrar_usuario(nome, email, senha, idade, peso, altura, objetivo, experiencia):
+    if email in usuarios:
+        return False, "Usuário já cadastrado"
+    usuarios[email] = {
+        "nome": nome,
+        "email": email,
+        "senha": senha,
+        "idade": idade,
+        "peso": peso,
+        "altura": altura,
+        "objetivo": objetivo,
+        "experiencia": experiencia,
+    }
+    return True, "Usuário cadastrado com sucesso"
 
-def atualizar(id_usuario, nome, idade, peso, altura, genero, objetivo, experiencia, dias_treino):
-    try:
-        atualizar_usuario(id_usuario, nome, idade, peso, altura, genero, objetivo, experiencia, dias_treino)
-    except Exception as e:
-        raise Exception(f"Erro ao atualizar usuário: {e}")
+def autenticar_usuario(email, senha):
+    if email in usuarios and usuarios[email]["senha"] == senha:
+        return True, usuarios[email]
+    return False, "Credenciais inválidas"
 
-def recuperar_senha(email):
-    try:
-        usuario = recuperar_por_email(email)
-        if usuario:
-            return f"Usuário encontrado: {usuario[0]} - Sua senha é: {usuario[1]}"
-        else:
-            raise ValueError("E-mail não encontrado.")
-    except Exception as e:
-        raise Exception(f"Erro ao recuperar senha: {e}")
+def atualizar_dados_usuario(email, **kwargs):
+    if email not in usuarios:
+        return False, "Usuário não encontrado"
+    for chave, valor in kwargs.items():
+        if chave in usuarios[email]:
+            usuarios[email][chave] = valor
+    return True, "Dados atualizados com sucesso"
