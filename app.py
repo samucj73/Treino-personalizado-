@@ -103,6 +103,7 @@ def exibir_treino():
     with tabs[1]:  # Treino
         st.subheader("Plano de Treino")
         try:
+            # Ajuste aqui, levando em consideração o objetivo
             treino = gerar_treino_personalizado(usuario['objetivo'], usuario['experiencia'], usuario['dias_treino'])
             
             progress = st.progress(0)
@@ -196,9 +197,4 @@ if __name__ == "__main__":
         exibir_treino()
     else:
         splash_screen()
-        st.markdown("<h1 style='text-align: center;'>🏋️🏋️‍♀️</h1>", unsafe_allow_html=True)
-        opcao = st.sidebar.selectbox("Escolha uma opção", ["Login", "Cadastro"])
-        if opcao == "Login":
-            login()
-        else:
-            cadastro()
+        st.markdown("<h1
