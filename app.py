@@ -18,6 +18,14 @@ def splash_screen():
     st.markdown("<p style='text-align: center;'>Seu treino, suas metas, sua evolução!</p>", unsafe_allow_html=True)
     st.markdown("---")
 
+def rodape():
+    st.markdown("""
+        <hr style="margin-top: 50px; margin-bottom: 10px;">
+        <div style="text-align: center; color: gray; font-size: 0.9em;">
+            Desenvolvido por SeuNome • Personal Trainer App © 2025
+        </div>
+    """, unsafe_allow_html=True)
+
 def cadastro():
     st.subheader("Cadastro de Novo Usuário")
     with st.form("cadastro_form"):
@@ -179,5 +187,13 @@ if __name__ == "__main__":
     else:
         splash_screen()
         login()
-        st.markdown("---")
-        cadastro()
+        if st.button("Quero me cadastrar"):
+            cadastro()
+        rodape()
+        def rodape():
+    st.markdown("""
+        <hr style="margin-top: 50px; margin-bottom: 10px;">
+        <div style="text-align: center; color: gray; font-size: 0.9em;">
+            Desenvolvido por SeuNome • Personal Trainer App © 2025
+        </div>
+    """, unsafe_allow_html=True)
