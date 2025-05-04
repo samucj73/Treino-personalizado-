@@ -1,102 +1,132 @@
-EXERCICIOS = {
+# exercicios.py
+
+exercicios = {
     "peito": {
-        "iniciante": [
-            {"nome": "Supino reto", "series": 3, "repeticoes": "10-12", "equipamento": "barra"},
-            {"nome": "Flexão de braço", "series": 3, "repeticoes": "12-15", "equipamento": "peso corporal"},
-            {"nome": "Crucifixo com halteres", "series": 3, "repeticoes": "10-12", "equipamento": "halteres"},
-            {"nome": "Supino inclinado máquina", "series": 3, "repeticoes": "10-12", "equipamento": "máquina"}
+        "Iniciante": [
+            ("Supino reto com barra", 3, 12, "barra"),
+            ("Supino inclinado com halteres", 3, 12, "halteres"),
+            ("Flexões de braço", 3, 15, "peso corporal"),
+            ("Peck deck", 3, 12, "máquina"),
         ],
-        "intermediario": [
-            {"nome": "Supino reto com halteres", "series": 4, "repeticoes": "8-10", "equipamento": "halteres"},
-            {"nome": "Flexão declinada", "series": 3, "repeticoes": "12", "equipamento": "peso corporal"}
+        "Intermediário": [
+            ("Crossover no cross", 3, 12, "cabos"),
+            ("Supino declinado com halteres", 3, 10, "halteres"),
         ],
-        "avancado": [
-            {"nome": "Supino inclinado com barra", "series": 4, "repeticoes": "8-10", "equipamento": "barra"},
-            {"nome": "Peck deck", "series": 4, "repeticoes": "12-15", "equipamento": "máquina"}
+        "Avançado": [
+            ("Flexão com palmas", 3, 15, "peso corporal"),
+            ("Supino reto com pegada fechada", 3, 10, "barra"),
         ]
     },
     "costas": {
-        "iniciante": [
-            {"nome": "Remada baixa", "series": 3, "repeticoes": "10-12", "equipamento": "máquina"},
-            {"nome": "Puxada frontal", "series": 3, "repeticoes": "10-12", "equipamento": "máquina"}
+        "Iniciante": [
+            ("Puxada frontal na barra", 3, 12, "máquina"),
+            ("Remada baixa", 3, 12, "máquina"),
+            ("Pulldown com pegada aberta", 3, 12, "máquina"),
+            ("Remada unilateral com halter", 3, 12, "halteres"),
         ],
-        "intermediario": [
-            {"nome": "Remada unilateral com halteres", "series": 4, "repeticoes": "10", "equipamento": "halteres"},
-            {"nome": "Puxada com triângulo", "series": 4, "repeticoes": "10-12", "equipamento": "máquina"}
+        "Intermediário": [
+            ("Remada curvada com barra", 3, 10, "barra"),
+            ("Pulldown com pegada supinada", 3, 10, "máquina"),
         ],
-        "avancado": [
-            {"nome": "Remada curvada com barra", "series": 4, "repeticoes": "8", "equipamento": "barra"},
-            {"nome": "Levantamento terra", "series": 3, "repeticoes": "6-8", "equipamento": "barra"}
-        ]
-    },
-    "pernas": {
-        "iniciante": [
-            {"nome": "Agachamento livre", "series": 3, "repeticoes": "10-12", "equipamento": "peso corporal"},
-            {"nome": "Cadeira extensora", "series": 3, "repeticoes": "12-15", "equipamento": "máquina"}
-        ],
-        "intermediario": [
-            {"nome": "Leg press", "series": 4, "repeticoes": "10", "equipamento": "máquina"},
-            {"nome": "Agachamento com halteres", "series": 4, "repeticoes": "10-12", "equipamento": "halteres"}
-        ],
-        "avancado": [
-            {"nome": "Agachamento com barra", "series": 4, "repeticoes": "6-8", "equipamento": "barra"},
-            {"nome": "Avanço com barra", "series": 3, "repeticoes": "8-10", "equipamento": "barra"}
+        "Avançado": [
+            ("Puxada na frente com triângulo", 3, 12, "cabos"),
+            ("Barra fixa", 3, 8, "peso corporal"),
         ]
     },
     "ombros": {
-        "iniciante": [
-            {"nome": "Elevação lateral", "series": 3, "repeticoes": "12", "equipamento": "halteres"},
-            {"nome": "Desenvolvimento máquina", "series": 3, "repeticoes": "10-12", "equipamento": "máquina"}
+        "Iniciante": [
+            ("Elevação lateral", 3, 12, "halteres"),
+            ("Desenvolvimento com halteres", 3, 12, "halteres"),
+            ("Elevação frontal", 3, 12, "halteres"),
+            ("Desenvolvimento na máquina", 3, 12, "máquina"),
         ],
-        "intermediario": [
-            {"nome": "Desenvolvimento com halteres", "series": 4, "repeticoes": "10", "equipamento": "halteres"},
-            {"nome": "Remada alta", "series": 3, "repeticoes": "12", "equipamento": "barra"}
+        "Intermediário": [
+            ("Elevação lateral inclinada", 3, 12, "halteres"),
+            ("Remada alta com barra", 3, 10, "barra"),
         ],
-        "avancado": [
-            {"nome": "Desenvolvimento com barra", "series": 4, "repeticoes": "8-10", "equipamento": "barra"},
-            {"nome": "Elevação frontal", "series": 3, "repeticoes": "12", "equipamento": "halteres"}
+        "Avançado": [
+            ("Desenvolvimento Arnold", 3, 12, "halteres"),
+            ("Puxada para face (face pull)", 3, 15, "cabos"),
         ]
     },
-    "bíceps": {
-        "iniciante": [
-            {"nome": "Rosca direta", "series": 3, "repeticoes": "10-12", "equipamento": "halteres"},
-            {"nome": "Rosca martelo", "series": 3, "repeticoes": "10-12", "equipamento": "halteres"}
+    "braços": {
+        "Iniciante": [
+            ("Rosca direta", 3, 12, "halteres"),
+            ("Tríceps corda", 3, 12, "cabos"),
+            ("Rosca alternada", 3, 12, "halteres"),
+            ("Tríceps banco", 3, 15, "peso corporal"),
         ],
-        "intermediario": [
-            {"nome": "Rosca concentrada", "series": 4, "repeticoes": "10", "equipamento": "halteres"},
-            {"nome": "Rosca inversa", "series": 3, "repeticoes": "12", "equipamento": "halteres"}
+        "Intermediário": [
+            ("Rosca martelo", 3, 10, "halteres"),
+            ("Tríceps francês", 3, 10, "halteres"),
         ],
-        "avancado": [
-            {"nome": "Rosca 21", "series": 3, "repeticoes": "7-7-7", "equipamento": "barra"},
-            {"nome": "Rosca na polia baixa", "series": 3, "repeticoes": "10-12", "equipamento": "máquina"}
+        "Avançado": [
+            ("Rosca concentrada", 3, 12, "halteres"),
+            ("Tríceps testa com barra W", 3, 10, "barra"),
         ]
     },
-    "tríceps": {
-        "iniciante": [
-            {"nome": "Tríceps corda", "series": 3, "repeticoes": "10-12", "equipamento": "máquina"},
-            {"nome": "Tríceps banco", "series": 3, "repeticoes": "12", "equipamento": "peso corporal"}
+    "pernas": {
+        "Iniciante": [
+            ("Agachamento livre", 3, 12, "peso corporal"),
+            ("Cadeira extensora", 3, 12, "máquina"),
+            ("Mesa flexora", 3, 12, "máquina"),
+            ("Leg press", 3, 12, "máquina"),
         ],
-        "intermediario": [
-            {"nome": "Tríceps francês", "series": 4, "repeticoes": "10", "equipamento": "halteres"},
-            {"nome": "Tríceps testa", "series": 4, "repeticoes": "10-12", "equipamento": "barra"}
+        "Intermediário": [
+            ("Afundo com halteres", 3, 10, "halteres"),
+            ("Agachamento com barra", 3, 10, "barra"),
         ],
-        "avancado": [
-            {"nome": "Tríceps coice", "series": 3, "repeticoes": "12", "equipamento": "halteres"},
-            {"nome": "Mergulho nas paralelas", "series": 3, "repeticoes": "6-10", "equipamento": "peso corporal"}
+        "Avançado": [
+            ("Agachamento frontal", 3, 10, "barra"),
+            ("Stiff com halteres", 3, 12, "halteres"),
         ]
     },
     "abdômen": {
-        "iniciante": [
-            {"nome": "Abdominal reto", "series": 3, "repeticoes": "15", "equipamento": "peso corporal"},
-            {"nome": "Elevação de pernas", "series": 3, "repeticoes": "15", "equipamento": "peso corporal"}
+        "Iniciante": [
+            ("Abdominal supra no solo", 3, 15, "peso corporal"),
+            ("Prancha", 3, 30, "peso corporal"),
+            ("Elevação de pernas", 3, 15, "peso corporal"),
+            ("Abdominal na máquina", 3, 12, "máquina"),
         ],
-        "intermediario": [
-            {"nome": "Prancha abdominal", "series": 3, "repeticoes": "30 seg", "equipamento": "peso corporal"},
-            {"nome": "Abdominal máquina", "series": 4, "repeticoes": "15", "equipamento": "máquina"}
+        "Intermediário": [
+            ("Prancha lateral", 3, 30, "peso corporal"),
+            ("Abdominal oblíquo com halteres", 3, 12, "halteres"),
         ],
-        "avancado": [
-            {"nome": "Abdominal com peso", "series": 3, "repeticoes": "15", "equipamento": "halteres"},
-            {"nome": "Prancha lateral com elevação", "series": 3, "repeticoes": "12", "equipamento": "peso corporal"}
+        "Avançado": [
+            ("Abdominal com carga", 3, 15, "halteres"),
+            ("Abdominal com bola suíça", 3, 15, "bola suíça"),
+        ]
+    },
+    "panturrilhas": {
+        "Iniciante": [
+            ("Elevação de panturrilha sentado", 3, 20, "máquina"),
+            ("Elevação em pé", 3, 20, "peso corporal"),
+            ("Panturrilha no leg press", 3, 20, "máquina"),
+            ("Elevação com halteres", 3, 20, "halteres"),
+        ],
+        "Intermediário": [
+            ("Panturrilha com barra", 3, 20, "barra"),
+            ("Panturrilha unilateral", 3, 15, "halteres"),
+        ],
+        "Avançado": [
+            ("Panturrilha com carga no Smith", 3, 15, "máquina"),
+            ("Panturrilha na escada", 3, 20, "peso corporal"),
+        ]
+    },
+    "trapézio": {
+        "Iniciante": [
+            ("Encolhimento com halteres", 3, 15, "halteres"),
+            ("Encolhimento na máquina", 3, 15, "máquina"),
+            ("Remada alta", 3, 12, "barra"),
+            ("Remada em pé com halteres", 3, 12, "halteres"),
+        ],
+        "Intermediário": [
+            ("Encolhimento com barra por trás", 3, 12, "barra"),
+            ("Puxada para o queixo", 3, 12, "barra"),
+        ],
+        "Avançado": [
+            ("Encolhimento unilateral", 3, 15, "halteres"),
+            ("Remada alta com cabos", 3, 12, "cabos"),
         ]
     }
 }
