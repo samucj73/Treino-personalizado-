@@ -1,4 +1,3 @@
-
 import streamlit as st
 st.set_page_config(page_title="Personal Trainer App", page_icon=":muscle:", layout="centered")
 
@@ -103,18 +102,20 @@ def exibir_treino():
     with tabs[1]:
         st.subheader("Plano de Treino")
 
-        try:
-            treino = gerar_treino_personalizado(
-                objetivo=usuario['objetivo'],
-                experiencia=usuario['experiencia'],
-                dias_treino=usuario['dias_treino']
-            )
+        if st.button("Gerar Treino Personalizado"):
+            try:
+                treino = gerar_treino_personalizado(
+                    objetivo=usuario['objetivo'],
+                    experiencia=usuario['experiencia'],
+                    dias_treino=usuario['dias_treino']
+                )
+                st.session_state["treino_gerado"] = treino
+                st.success("Treino gerado com sucesso!")
+            except Exception as e:
+                st.error(f"Erro ao gerar treino: {e}")
 
-            progress = st.progress(0)
-            for i in range(100):
-                progress.progress(i + 1)
-            st.success("Treino carregado!")
-
+        if "treino_gerado" in st.session_state:
+            treino = st.session_state["treino_gerado"]
             for dia, exercicios in treino.items():
                 with st.expander(dia):
                     for ex in exercicios:
@@ -122,8 +123,6 @@ def exibir_treino():
                         st.write(f"- Séries: {ex['series']}")
                         st.write(f"- Repetições: {ex['repeticoes']}")
                         st.write(f"- Equipamento: {ex['equipamento']}")
-        except Exception as e:
-            st.error(f"Erro ao gerar treino: {e}")
 
     with tabs[2]:
         st.subheader("Atualizar Dados")
