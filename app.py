@@ -28,14 +28,11 @@ def cadastro():
         peso = st.number_input("Peso (kg)", min_value=30.0, max_value=300.0, step=0.1)
         altura = st.number_input("Altura (m)", min_value=1.0, max_value=2.5, step=0.01)
         genero = st.radio("Gênero", ("Masculino", "Feminino"))
-        objetivo = st.selectbox("Objetivo", ["Perda de peso", "Ganhar massa muscular", "Melhorar resistência"])
-        experiencia = st.selectbox("Nível de experiência", ["Iniciante", "Intermediário", "Avançado"])
-        dias_treino = st.slider("Dias de treino na semana", 1, 7, 3)
 
         submitted = st.form_submit_button("Cadastrar")
         if submitted:
             try:
-                cadastrar(nome, email, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino)
+                cadastrar(nome, email, senha, idade, peso, altura, genero, "", "", 0)
                 st.success("Usuário cadastrado com sucesso!")
                 st.balloons()
             except Exception as e:
@@ -95,34 +92,28 @@ def exibir_treino():
         st.write(f"**Peso:** {usuario['peso']} kg")
         st.write(f"**Altura:** {usuario['altura']} m")
         st.write(f"**Gênero:** {usuario['genero']}")
-        st.write(f"**Objetivo:** {usuario['objetivo']}")
-        st.write(f"**Experiência:** {usuario['experiencia']}")
-        st.write(f"**Dias de treino por semana:** {usuario['dias_treino']}")
 
     with tabs[1]:
-        st.subheader("Plano de Treino")
+        st.subheader("Gerar Plano de Treino Personalizado")
 
-        if st.button("Gerar Treino Personalizado"):
+        objetivo = st.selectbox("Selecione seu objetivo", ["Perda de peso", "Ganhar massa muscular", "Melhorar resistência"])
+        experiencia = st.selectbox("Selecione seu nível de experiência", ["Iniciante", "Intermediário", "Avançado"])
+        dias_treino = st.slider("Quantos dias por semana você pode treinar?", 1, 7, 3)
+
+        if st.button("Gerar Treino"):
             try:
-                treino = gerar_treino_personalizado(
-                    objetivo=usuario['objetivo'],
-                    experiencia=usuario['experiencia'],
-                    dias_treino=usuario['dias_treino']
-                )
-                st.session_state["treino_gerado"] = treino
+                treino = gerar_treino_personalizado(objetivo, experiencia, dias_treino)
                 st.success("Treino gerado com sucesso!")
+
+                for dia, exercicios in treino.items():
+                    with st.expander(dia):
+                        for ex in exercicios:
+                            st.markdown(f"**{ex['nome']}**")
+                            st.write(f"- Séries: {ex['series']}")
+                            st.write(f"- Repetições: {ex['repeticoes']}")
+                            st.write(f"- Equipamento: {ex['equipamento']}")
             except Exception as e:
                 st.error(f"Erro ao gerar treino: {e}")
-
-        if "treino_gerado" in st.session_state:
-            treino = st.session_state["treino_gerado"]
-            for dia, exercicios in treino.items():
-                with st.expander(dia):
-                    for ex in exercicios:
-                        st.markdown(f"**{ex['nome']}**")
-                        st.write(f"- Séries: {ex['series']}")
-                        st.write(f"- Repetições: {ex['repeticoes']}")
-                        st.write(f"- Equipamento: {ex['equipamento']}")
 
     with tabs[2]:
         st.subheader("Atualizar Dados")
@@ -132,12 +123,9 @@ def exibir_treino():
             peso = st.number_input("Peso (kg)", min_value=30.0, max_value=300.0, value=usuario['peso'], step=0.1)
             altura = st.number_input("Altura (m)", min_value=1.0, max_value=2.5, value=usuario['altura'], step=0.01)
             genero = st.radio("Gênero", ("Masculino", "Feminino"), index=0 if usuario['genero'] == "Masculino" else 1)
-            objetivo = st.selectbox("Objetivo", ["Perda de peso", "Ganhar massa muscular", "Melhorar resistência"], index=["Perda de peso", "Ganhar massa muscular", "Melhorar resistência"].index(usuario['objetivo']))
-            experiencia = st.selectbox("Experiência", ["Iniciante", "Intermediário", "Avançado"], index=["Iniciante", "Intermediário", "Avançado"].index(usuario['experiencia']))
-            dias_treino = st.slider("Dias de treino por semana", 1, 7, value=usuario['dias_treino'])
 
             if st.form_submit_button("Salvar"):
-                atualizar(usuario['id'], nome, idade, peso, altura, genero, objetivo, experiencia, dias_treino)
+                atualizar(usuario['id'], nome, idade, peso, altura, genero, "", "", 0)
                 st.success("Dados atualizados!")
                 st.rerun()
 
@@ -153,7 +141,7 @@ def exibir_treino():
         altura = usuario['altura']
         idade = usuario['idade']
         genero = usuario['genero']
-        objetivo = usuario['objetivo']
+        objetivo = st.selectbox("Informe o objetivo para cálculo nutricional", ["Perda de peso", "Ganhar massa muscular", "Melhorar resistência"])
 
         with st.form("form_analise_corporal"):
             circunferencia = st.number_input("Informe sua circunferência da cintura (cm)", min_value=30.0, max_value=200.0, step=0.1)
