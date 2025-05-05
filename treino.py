@@ -38,7 +38,7 @@ def definir_qtd_exercicios(experiencia):
         return 4
     elif experiencia == "Intermediário":
         return 6
-    else:
+    else:  # Avançado
         return 8
 
 def definir_series(objetivo):
@@ -46,7 +46,7 @@ def definir_series(objetivo):
         return 3
     elif objetivo == "Ganhar massa muscular":
         return 4
-    else:  # Resistência
+    else:  # Melhorar resistência
         return 2
 
 def definir_repeticoes(objetivo):
@@ -54,5 +54,5 @@ def definir_repeticoes(objetivo):
         return 15
     elif objetivo == "Ganhar massa muscular":
         return 10
-    else:
+    else:  # Melhorar resistência
         return 20
