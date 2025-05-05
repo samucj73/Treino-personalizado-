@@ -36,6 +36,8 @@ def cadastro():
                 cadastrar(nome, email, senha, idade, peso, altura, genero, "", "", 0)
                 st.success("Usuário cadastrado com sucesso!")
                 st.balloons()
+                st.session_state['mostrar_cadastro'] = False  # Voltar para a tela de login
+                st.rerun()
             except Exception as e:
                 st.error(str(e))
 
@@ -138,6 +140,7 @@ def exibir_treino():
         if st.button("Sair da Conta"):
             del st.session_state['usuario']
             st.success("Sessão encerrada!")
+            st.session_state['mostrar_cadastro'] = False  # Garantir que a tela de login seja exibida
             st.rerun()
 
     with tabs[3]:
@@ -185,9 +188,6 @@ if __name__ == "__main__":
     elif 'mostrar_cadastro' in st.session_state and st.session_state['mostrar_cadastro']:
         splash_screen()
         cadastro()
-        if st.button("Voltar para login"):
-            st.session_state['mostrar_cadastro'] = False
-            st.rerun()
     else:
         splash_screen()
         login()
