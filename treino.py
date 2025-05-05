@@ -1,58 +1,40 @@
 import random
 from exercicios import exercicios_por_grupo
 
-def gerar_treino_personalizado(objetivo, experiencia, dias_treino):
-    grupos = list(exercicios_por_grupo.keys())
+def gerar_treino_personalizado(objetivo, experiencia, dias_treino, grupos_musculares):
     treino = {}
+    total_dias = dias_treino
+    grupos_selecionados = grupos_musculares
 
-    grupos_por_dia = dividir_grupos(grupos, dias_treino)
+    # Distribuir os grupos musculares selecionados pelos dias de treino
+    distribuicao = distribuir_grupos(grupos_selecionados, total_dias)
 
-    for i in range(dias_treino):
-        dia = f"Dia {i+1}"
+    for i, grupos_do_dia in enumerate(distribuicao, 1):
+        dia = f"Dia {i}"
         treino[dia] = []
 
-        for grupo in grupos_por_dia[i]:
-            exercicios = exercicios_por_grupo[grupo]
-            qtd = definir_qtd_exercicios(experiencia)
-            selecionados = random.sample(exercicios, min(qtd, len(exercicios)))
+        for grupo in grupos_do_dia:
+            exercicios = exercicios_por_grupo.get(grupo, [])
 
-            for ex in selecionados:
-                treino[dia].append({
-                    "nome": ex["nome"],
-                    "series": definir_series(objetivo),
-                    "repeticoes": definir_repeticoes(objetivo),
-                    "equipamento": ex["equipamento"]
-                })
+            # Seleção de exercícios com base no nível de experiência
+            if experiencia == "Iniciante":
+                selecionados = exercicios[:4]
+            elif experiencia == "Intermediário":
+                selecionados = exercicios[:6]
+            else:  # Avançado
+                selecionados = exercicios
+
+            # Embaralha e seleciona alguns exercícios
+            random.shuffle(selecionados)
+            quantidade = min(3, len(selecionados)) if experiencia == "Iniciante" else min(5, len(selecionados))
+            treino[dia].extend(selecionados[:quantidade])
 
     return treino
 
-def dividir_grupos(grupos, dias):
-    random.shuffle(grupos)
-    grupos_por_dia = [[] for _ in range(dias)]
+def distribuir_grupos(grupos, dias):
+    """Distribui os grupos musculares selecionados ao longo dos dias de treino."""
+    distribuicao = [[] for _ in range(dias)]
     for i, grupo in enumerate(grupos):
-        grupos_por_dia[i % dias].append(grupo)
-    return grupos_por_dia
-
-def definir_qtd_exercicios(experiencia):
-    if experiencia == "Iniciante":
-        return 4
-    elif experiencia == "Intermediário":
-        return 6
-    else:
-        return 8
-
-def definir_series(objetivo):
-    if objetivo == "Perda de peso":
-        return 3
-    elif objetivo == "Ganhar massa muscular":
-        return 4
-    else:  # Resistência
-        return 2
-
-def definir_repeticoes(objetivo):
-    if objetivo == "Perda de peso":
-        return 15
-    elif objetivo == "Ganhar massa muscular":
-        return 10
-    else:
-        return 20
+        dia = i % dias
+        distribuicao[dia].append(grupo)
+    return distribuicao
