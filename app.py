@@ -164,6 +164,8 @@ def exibir_treino():
             idade_metabolica = calcular_idade_metabolica(tmb, idade)
             agua = recomendacao_hidratacao(peso)
             proteina = recomendacao_proteina(peso, objetivo)
+            gordura_recomendada = recomendacao_gordura(peso, objetivo)
+            carboidrato = recomendacao_carboidrato(peso, objetivo)
 
             st.markdown(f"**IMC:** {imc:.2f} ({faixa_imc})")
             st.markdown(f"**TMB (Taxa Metabólica Basal):** {tmb:.2f} kcal/dia")
@@ -172,6 +174,8 @@ def exibir_treino():
             st.markdown(f"**Idade Metabólica Estimada:** {idade_metabolica:.0f} anos")
             st.markdown(f"**Hidratação Recomendada:** {agua:.0f} ml por dia")
             st.markdown(f"**Proteína Diária Recomendada:** {proteina:.2f} g")
+            st.markdown(f"**Gordura Recomendada:** {gordura_recomendada:.2f} g/dia")
+            st.markdown(f"**Carboidrato Recomendado:** {carboidrato:.2f} g/dia")
 
 def rodape():
     st.markdown("""
