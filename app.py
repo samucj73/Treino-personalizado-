@@ -41,7 +41,7 @@ def cadastro():
                 # Define flag para redirecionar após sucesso
                 st.session_state['mostrar_cadastro'] = False
                 st.session_state['redirecionar_login'] = True
-                st.experimental_rerun()
+                st.rerun()
             except Exception as e:
                 st.error(str(e))
 
