@@ -45,29 +45,3 @@ def recomendacao_proteina(peso, objetivo):
     return proteina
 
 # Interface Streamlit
-st.title("Calculadora Corporal")
-
-peso = st.number_input("Peso (kg)", min_value=30.0, max_value=200.0, step=0.1)
-altura = st.number_input("Altura (m)", min_value=1.0, max_value=2.5, step=0.01)
-idade = st.number_input("Idade", min_value=10, max_value=100)
-genero = st.selectbox("Gênero", ["Masculino", "Feminino"])
-circunferencia = st.number_input("Circunferência da cintura (cm)", min_value=40.0, max_value=200.0, step=0.1)
-objetivo = st.selectbox("Objetivo", ["Aumento muscular", "Manutenção", "Emagrecimento"])
-
-if st.button("Calcular"):
-    imc, faixa_imc = calcular_imc(peso, altura)
-    tmb = calcular_tmb(idade, peso, altura, genero)
-    percentual_gordura = calcular_percentual_gordura(peso, circunferencia, idade, genero)
-    massa_magra = calcular_massa_muscular(peso, percentual_gordura)
-    idade_metabolica = calcular_idade_metabolica(tmb, idade)
-    agua = recomendacao_hidratacao(peso)
-    proteina = recomendacao_proteina(peso, objetivo)
-
-    st.subheader("Resultados:")
-    st.write(f"**IMC:** {imc:.2f} - {faixa_imc}")
-    st.write(f"**TMB:** {tmb:.2f} kcal/dia")
-    st.write(f"**Percentual de gordura estimado:** {percentual_gordura:.2f}%")
-    st.write(f"**Massa muscular estimada:** {massa_magra:.2f} kg")
-    st.write(f"**Idade metabólica estimada:** {idade_metabolica:.1f} anos")
-    st.write(f"**Hidratação recomendada:** {agua:.0f} ml/dia")
-    st.write(f"**Proteína recomendada:** {proteina:.1f} g/dia")
