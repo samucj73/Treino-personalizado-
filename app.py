@@ -38,9 +38,10 @@ def cadastro():
                 cadastrar(nome, email, senha, idade, peso, altura, genero, "", "", 0)
                 st.success("Usuário cadastrado com sucesso!")
                 st.balloons()
-                # Aguarda 3 segundos e recarrega a página
-                st.markdown("<script>setTimeout(function() { window.location.reload(); }, 3000);</script>", unsafe_allow_html=True)
-                st.stop()
+                # Define flag para redirecionar após sucesso
+                st.session_state['mostrar_cadastro'] = False
+                st.session_state['redirecionar_login'] = True
+                st.experimental_rerun()
             except Exception as e:
                 st.error(str(e))
 
@@ -209,7 +210,11 @@ def rodape():
 if __name__ == "__main__":
     splash_screen()
 
-    if 'usuario' in st.session_state:
+    # Lógica de redirecionamento após cadastro
+    if 'redirecionar_login' in st.session_state and st.session_state['redirecionar_login']:
+        del st.session_state['redirecionar_login']
+        login()
+    elif 'usuario' in st.session_state:
         exibir_treino()
     elif 'mostrar_cadastro' in st.session_state and st.session_state['mostrar_cadastro']:
         cadastro()
