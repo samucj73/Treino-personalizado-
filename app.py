@@ -16,7 +16,7 @@ from calculos import (
     recomendacao_gordura,
     recomendacao_carboidrato
 )
-from ia import exibir_modulo_ia  # <-- Nova importação
+   # <-- Nova importação
 
 def splash_screen():
     st.markdown("<h1 style='text-align: center;'>Personal Trainer App</h1>", unsafe_allow_html=True)
