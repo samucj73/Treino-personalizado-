@@ -62,7 +62,7 @@ def cadastrar_usuario(nome, email, senha, idade, peso, altura, genero, objetivo,
     try:
         cursor.execute(sql.SQL("""
             INSERT INTO {table} (nome, email, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """).format(table=sql.Identifier(NOME_TABELA)),
         (nome, email, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino))
         conn.commit()
