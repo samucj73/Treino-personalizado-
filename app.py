@@ -1,3 +1,4 @@
+
 import streamlit as st
 st.set_page_config(page_title="Personal Trainer App", page_icon=":muscle:", layout="centered")
 
@@ -115,8 +116,8 @@ def exibir_treino():
                         with st.expander(dia):
                             for ex in exercicios:
                                 st.markdown(f"**{ex['nome']}**")
-                                st.write(f"- Séries: {ex['series']}")
-                                st.write(f"- Repetições: {ex['repeticoes']}")
+                                st.write(f"- Séries: {ex['séries']}")
+                                st.write(f"- Repetições: {ex['repetições']}")
                                 st.write(f"- Equipamento: {ex['equipamento']}")
                 except Exception as e:
                     st.error(f"Erro ao gerar treino: {e}")
