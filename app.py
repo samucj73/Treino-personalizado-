@@ -2,6 +2,7 @@ import streamlit as st
 st.set_page_config(page_title="Personal Trainer App", page_icon=":muscle:", layout="centered")
 
 from usuario import cadastrar, obter, atualizar, recuperar_senha
+from inteligencia_artificial import exibir_ia
 from treino import gerar_treino_personalizado
 from exercicios import exercicios_por_grupo
 from calculos import (
