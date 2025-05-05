@@ -1,3 +1,4 @@
+
 exercicios_por_grupo = {
     "peito": [
         {"nome": "Supino reto com barra", "equipamento": "Barra"},
