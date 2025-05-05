@@ -38,8 +38,9 @@ def cadastro():
                 cadastrar(nome, email, senha, idade, peso, altura, genero, "", "", 0)
                 st.success("Usuário cadastrado com sucesso!")
                 st.balloons()
-                st.session_state['mostrar_cadastro'] = False
-                st.rerun()
+                # Aguarda 3 segundos e recarrega a página
+                st.markdown("<script>setTimeout(function() { window.location.reload(); }, 3000);</script>", unsafe_allow_html=True)
+                st.stop()
             except Exception as e:
                 st.error(str(e))
 
