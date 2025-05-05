@@ -98,32 +98,49 @@ def exibir_treino():
         st.write(f"**Altura:** {usuario['altura']} m")
         st.write(f"**Gênero:** {usuario['genero']}")
 
-    with tabs[1]:
-        st.subheader("Gerar Plano de Treino Personalizado")
+   with tabs[1]:
+    st.subheader("Gerar Plano de Treino Personalizado")
 
-        objetivo = st.selectbox("Selecione seu objetivo", ["Perda de peso", "Ganhar massa muscular", "Melhorar resistência"])
-        experiencia = st.selectbox("Selecione seu nível de experiência", ["Iniciante", "Intermediário", "Avançado"])
-        dias_treino = st.slider("Quantos dias por semana você pode treinar?", 1, 7, 3)
-        grupos_musculares = list(exercicios_por_grupo.keys())
-        grupos_selecionados = st.multiselect("Selecione os grupos musculares que deseja treinar", grupos_musculares)
+    objetivo = st.selectbox("Selecione seu objetivo", ["Perda de peso", "Ganhar massa muscular", "Melhorar resistência"])
+    experiencia = st.selectbox("Selecione seu nível de experiência", ["Iniciante", "Intermediário", "Avançado"])
+    dias_treino = st.slider("Quantos dias por semana você pode treinar?", 1, 7, 3)
+    grupos_musculares = list(exercicios_por_grupo.keys())
+    grupos_selecionados = st.multiselect("Selecione os grupos musculares que deseja treinar", grupos_musculares)
 
-        if st.button("Gerar Treino"):
-            if not grupos_selecionados:
-                st.warning("Por favor, selecione ao menos um grupo muscular.")
-            else:
-                try:
-                    treino = gerar_treino_personalizado(objetivo, experiencia, dias_treino, grupos_selecionados)
-                    st.success("Treino gerado com sucesso!")
+    if st.button("Gerar Treino"):
+        if not grupos_selecionados:
+            st.warning("Por favor, selecione ao menos um grupo muscular.")
+        else:
+            try:
+                treino = gerar_treino_personalizado(objetivo, experiencia, dias_treino, grupos_selecionados)
+                st.success("Treino gerado com sucesso!")
 
-                    for dia, exercicios in treino.items():
-                        with st.expander(dia):
-                            for ex in exercicios:
-                                st.markdown(f"**{ex['nome']}**")
-                                st.write(f"- Séries: {ex['séries']}")
-                                st.write(f"- Repetições: {ex['repetições']}")
-                                st.write(f"- Equipamento: {ex['equipamento']}")
-                except Exception as e:
-                    st.error(f"Erro ao gerar treino: {e}")
+                conteudo_txt = f"Plano de Treino para {usuario['nome']}\nObjetivo: {objetivo}\nExperiência: {experiencia}\nDias por semana: {dias_treino}\n\n"
+
+                for dia, exercicios in treino.items():
+                    with st.expander(dia):
+                        st.markdown(f"### {dia}")
+                        conteudo_txt += f"{dia}\n"
+                        for ex in exercicios:
+                            st.markdown(f"**{ex['nome']}**")
+                            st.write(f"- Séries: {ex['séries']}")
+                            st.write(f"- Repetições: {ex['repetições']}")
+                            st.write(f"- Equipamento: {ex['equipamento']}")
+                            conteudo_txt += (
+                                f"- {ex['nome']}\n"
+                                f"  Séries: {ex['séries']}, Repetições: {ex['repetições']}, Equipamento: {ex['equipamento']}\n"
+                            )
+                        conteudo_txt += "\n"
+
+                st.download_button(
+                    label="📄 Baixar Plano de Treino (.txt)",
+                    data=conteudo_txt,
+                    file_name="plano_de_treino.txt",
+                    mime="text/plain"
+                )
+
+            except Exception as e:
+                st.error(f"Erro ao gerar treino: {e}")
 
     with tabs[2]:
         st.subheader("Atualizar Dados")
