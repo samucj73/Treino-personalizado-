@@ -183,13 +183,13 @@ def rodape():
 
 # Execução principal
 if __name__ == "__main__":
+    splash_screen()  # Mostra o cabeçalho uma única vez
+
     if 'usuario' in st.session_state:
         exibir_treino()
     elif 'mostrar_cadastro' in st.session_state and st.session_state['mostrar_cadastro']:
-        splash_screen()
         cadastro()
     else:
-        splash_screen()
         login()
 
     rodape()
