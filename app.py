@@ -3,6 +3,7 @@ st.set_page_config(page_title="Personal Trainer App", page_icon=":muscle:", layo
 
 from usuario import cadastrar, obter, atualizar, recuperar_senha
 from treino import gerar_treino_personalizado
+from exercicios import exercicios_por_grupo
 from calculos import (
     calcular_imc,
     calcular_tmb,
@@ -99,21 +100,26 @@ def exibir_treino():
         objetivo = st.selectbox("Selecione seu objetivo", ["Perda de peso", "Ganhar massa muscular", "Melhorar resistência"])
         experiencia = st.selectbox("Selecione seu nível de experiência", ["Iniciante", "Intermediário", "Avançado"])
         dias_treino = st.slider("Quantos dias por semana você pode treinar?", 1, 7, 3)
+        grupos_musculares = list(exercicios_por_grupo.keys())
+        grupos_selecionados = st.multiselect("Selecione os grupos musculares que deseja treinar", grupos_musculares)
 
         if st.button("Gerar Treino"):
-            try:
-                treino = gerar_treino_personalizado(objetivo, experiencia, dias_treino)
-                st.success("Treino gerado com sucesso!")
+            if not grupos_selecionados:
+                st.warning("Por favor, selecione ao menos um grupo muscular.")
+            else:
+                try:
+                    treino = gerar_treino_personalizado(objetivo, experiencia, dias_treino, grupos_selecionados)
+                    st.success("Treino gerado com sucesso!")
 
-                for dia, exercicios in treino.items():
-                    with st.expander(dia):
-                        for ex in exercicios:
-                            st.markdown(f"**{ex['nome']}**")
-                            st.write(f"- Séries: {ex['series']}")
-                            st.write(f"- Repetições: {ex['repeticoes']}")
-                            st.write(f"- Equipamento: {ex['equipamento']}")
-            except Exception as e:
-                st.error(f"Erro ao gerar treino: {e}")
+                    for dia, exercicios in treino.items():
+                        with st.expander(dia):
+                            for ex in exercicios:
+                                st.markdown(f"**{ex['nome']}**")
+                                st.write(f"- Séries: {ex['series']}")
+                                st.write(f"- Repetições: {ex['repeticoes']}")
+                                st.write(f"- Equipamento: {ex['equipamento']}")
+                except Exception as e:
+                    st.error(f"Erro ao gerar treino: {e}")
 
     with tabs[2]:
         st.subheader("Atualizar Dados")
