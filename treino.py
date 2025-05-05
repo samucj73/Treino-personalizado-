@@ -1,42 +1,37 @@
-from exercicios import EXERCICIOS_POR_GRUPO
 import random
+from exercicios import exercicios
 
 def gerar_treino_personalizado(objetivo, experiencia, dias_treino):
-    grupos_musculares = list(EXERCICIOS_POR_GRUPO.keys())
-    treino = {}
+    treino_final = {}
 
-    grupos_selecionados = random.sample(grupos_musculares, k=min(dias_treino, len(grupos_musculares)))
+    grupos = list(exercicios.keys())
+    num_grupos = len(grupos)
+    grupos_selecionados = grupos[:]
 
-    for i, grupo in enumerate(grupos_selecionados):
-        dia = f"Dia {i+1} - {grupo}"
-        treino[dia] = []
+    for i in range(dias_treino):
+        grupo = grupos_selecionados[i % num_grupos]
+        nivel = experiencia
 
-        exercicios_grupo = EXERCICIOS_POR_GRUPO.get(grupo, [])
-        exercicios_filtrados = [ex for ex in exercicios_grupo if ex["nivel"] in niveis_aceitos(experiencia)]
+        if nivel not in exercicios[grupo]:
+            continue
 
-        if experiencia == "Iniciante":
-            exercicios_dia = random.sample(exercicios_filtrados, min(4, len(exercicios_filtrados)))
-        elif experiencia == "Intermediário":
-            exercicios_dia = random.sample(exercicios_filtrados, min(6, len(exercicios_filtrados)))
-        else:
-            exercicios_dia = random.sample(exercicios_filtrados, min(8, len(exercicios_filtrados)))
+        lista_exercicios = exercicios[grupo][nivel]
+        num_exercicios = min(3, len(lista_exercicios))
+        selecionados = random.sample(lista_exercicios, num_exercicios)
 
-        treino[dia] = [
-            {
-                "nome": ex["nome"],
-                "series": ex["series"],
-                "repeticoes": ex["repeticoes"],
-                "equipamento": ex["equipamento"]
-            }
-            for ex in exercicios_dia
-        ]
+        treino_final[f"Dia {i+1} - {grupo.title()}"] = []
+        for nome, series, repeticoes, equipamento in selecionados:
+            treino_final[f"Dia {i+1} - {grupo.title()}"].append({
+                "nome": nome,
+                "series": series,
+                "repeticoes": repeticoes,
+                "equipamento": equipamento
+            })
 
-    return treino
+    return treino_final
 
-def niveis_aceitos(nivel):
-    if nivel == "Iniciante":
-        return ["Iniciante"]
-    elif nivel == "Intermediário":
-        return ["Iniciante", "Intermediário"]
-    else:
-        return ["Iniciante", "Intermediário", "Avançado"]
+def exibir_treino(treino):
+    for dia, exercicios_dia in treino.items():
+        print(f"\n{dia}")
+        for ex in exercicios_dia:
+            print(f"- {ex['nome']} | Séries: {ex['series']} | Repetições: {ex['repeticoes']} | Equipamento: {ex['equipamento']}")
