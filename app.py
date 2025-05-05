@@ -1,4 +1,3 @@
-
 import streamlit as st
 st.set_page_config(page_title="Personal Trainer App", page_icon=":muscle:", layout="centered")
 
@@ -61,9 +60,8 @@ def login():
     if st.button("Esqueceu a senha?"):
         recuperar_senha_form()
 
-    if st.button("Cadastrar novo usuário"):
+    if st.button("Novo por aqui? Cadastre-se!"):
         st.session_state['mostrar_cadastro'] = True
-        st.rerun()
 
 def recuperar_senha_form():
     st.subheader("Recuperação de Senha")
@@ -156,11 +154,9 @@ def exibir_treino():
         genero = usuario['genero']
         objetivo = usuario['objetivo']
 
-        with st.form("form_analise_corporal"):
-            circunferencia = st.number_input("Informe sua circunferência da cintura (cm)", min_value=30.0, max_value=200.0, step=0.1)
-            calcular = st.form_submit_button("Calcular Análises Corporais")
+        circunferencia = st.number_input("Informe sua circunferência da cintura (cm)", min_value=30.0, max_value=200.0, step=0.1)
 
-        if calcular:
+        if circunferencia:
             imc, faixa_imc = calcular_imc(peso, altura)
             tmb = calcular_tmb(idade, peso, altura, genero)
             gordura = calcular_percentual_gordura(peso, circunferencia, idade, genero)
@@ -176,11 +172,26 @@ def exibir_treino():
             st.markdown(f"**Idade Metabólica Estimada:** {idade_metabolica:.0f} anos")
             st.markdown(f"**Hidratação Recomendada:** {agua:.0f} ml por dia")
             st.markdown(f"**Proteína Diária Recomendada:** {proteina:.2f} g")
+        else:
+            st.info("Informe a circunferência da cintura para visualizar as análises completas.")
 
 def rodape():
     st.markdown("""
-        <hr style="margin-top: 50px; margin-bottom: 10px;">
-        <div style="text-align: center; color: gray; font-size: 0.9em;">
+        <style>
+            .custom-footer {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background-color: #f0f0f0;
+                padding: 10px 0;
+                text-align: center;
+                font-size: 0.9em;
+                color: gray;
+                z-index: 100;
+            }
+        </style>
+        <div class="custom-footer">
             Desenvolvido por Samucj Technology © 2025
         </div>
     """, unsafe_allow_html=True)
@@ -189,14 +200,13 @@ def rodape():
 if __name__ == "__main__":
     if 'usuario' in st.session_state:
         exibir_treino()
-    elif 'mostrar_cadastro' in st.session_state and st.session_state['mostrar_cadastro']:
-        splash_screen()
-        cadastro()
-        if st.button("Voltar para login"):
-            st.session_state['mostrar_cadastro'] = False
-            st.rerun()
     else:
+        if 'mostrar_cadastro' not in st.session_state:
+            st.session_state['mostrar_cadastro'] = False
+
         splash_screen()
         login()
+        if st.session_state['mostrar_cadastro']:
+            cadastro()
 
     rodape()
