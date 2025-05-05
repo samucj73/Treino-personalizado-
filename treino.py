@@ -29,7 +29,19 @@ def gerar_treino_personalizado(objetivo, experiencia, dias_treino, grupos_muscul
             quantidade = min(3, len(selecionados)) if experiencia == "Iniciante" else min(5, len(selecionados))
             treino[dia].extend(selecionados[:quantidade])
 
-    return treino
+    # Organiza a saída com informações sobre séries, repetições e equipamento
+    treino_completo = {}
+    for dia, exercicios in treino.items():
+        treino_completo[dia] = []
+        for exercicio in exercicios:
+            treino_completo[dia].append({
+                'nome': exercicio['nome'],
+                'séries': exercicio['séries'],
+                'repetições': exercicio['repetições'],
+                'equipamento': exercicio['equipamento']
+            })
+
+    return treino_completo
 
 def distribuir_grupos(grupos, dias):
     """Distribui os grupos musculares selecionados ao longo dos dias de treino."""
