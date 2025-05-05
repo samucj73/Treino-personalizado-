@@ -37,11 +37,24 @@ def recomendacao_hidratacao(peso):
 
 def recomendacao_proteina(peso, objetivo):
     if objetivo.lower() == "aumento muscular":
-        proteina = peso * 2.0
+        return peso * 2.0
     elif objetivo.lower() == "manutenção":
-        proteina = peso * 1.5
+        return peso * 1.5
     else:
-        proteina = peso * 1.2
-    return proteina
+        return peso * 1.2
 
-# Interface Streamlit
+def recomendacao_gordura(peso, objetivo):
+    if objetivo.lower() == "aumento muscular":
+        return peso * 1.0  # gramas por kg
+    elif objetivo.lower() == "manutenção":
+        return peso * 0.8
+    else:
+        return peso * 0.6
+
+def recomendacao_carboidrato(peso, objetivo):
+    if objetivo.lower() == "aumento muscular":
+        return peso * 5.0  # gramas por kg
+    elif objetivo.lower() == "manutenção":
+        return peso * 4.0
+    else:
+        return peso * 3.0
