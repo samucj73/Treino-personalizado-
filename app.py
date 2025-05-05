@@ -11,7 +11,9 @@ from calculos import (
     calcular_massa_muscular,
     calcular_idade_metabolica,
     recomendacao_hidratacao,
-    recomendacao_proteina
+    recomendacao_proteina,
+    recomendacao_gordura,
+    recomendacao_carboidrato
 )
 
 def splash_screen():
