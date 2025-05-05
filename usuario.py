@@ -1,52 +1,32 @@
-# usuario.py
-
 import uuid
-
-usuarios = {}
+from db import cadastrar_usuario, obter_usuario, atualizar_usuario, recuperar_por_email
 
 def cadastrar(nome, email, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino):
-    if email in usuarios:
-        raise ValueError("Usuário já cadastrado com este e-mail.")
+    # Usando a função do db.py para cadastrar usuário
+    try:
+        cadastrar_usuario(nome, email, senha, idade, peso, altura, genero, objetivo, experiencia, dias_treino)
+    except ValueError as e:
+        raise e
+    except Exception as e:
+        raise Exception(f"Erro ao cadastrar usuário: {e}")
 
-    usuario_id = str(uuid.uuid4())
-    usuarios[email] = {
-        "id": usuario_id,
-        "nome": nome,
-        "email": email,
-        "senha": senha,
-        "idade": idade,
-        "peso": peso,
-        "altura": altura,
-        "genero": genero,
-        "objetivo": objetivo,
-        "experiencia": experiencia,
-        "dias_treino": dias_treino
-    }
-
-def obter(nome, senha):
-    for usuario in usuarios.values():
-        if usuario["nome"] == nome and usuario["senha"] == senha:
-            return usuario
+def obter(nome_ou_email, senha):
+    # Usando a função do db.py para obter o usuário
+    usuario = obter_usuario(nome_ou_email, senha)
+    if usuario:
+        return usuario
     return None
 
 def atualizar(usuario_id, nome, idade, peso, altura, genero, objetivo, experiencia, dias_treino):
-    for usuario in usuarios.values():
-        if usuario["id"] == usuario_id:
-            usuario.update({
-                "nome": nome,
-                "idade": idade,
-                "peso": peso,
-                "altura": altura,
-                "genero": genero,
-                "objetivo": objetivo,
-                "experiencia": experiencia,
-                "dias_treino": dias_treino
-            })
-            return
-    raise ValueError("Usuário não encontrado.")
+    try:
+        atualizar_usuario(usuario_id, nome, idade, peso, altura, genero, objetivo, experiencia, dias_treino)
+    except Exception as e:
+        raise Exception(f"Erro ao atualizar usuário: {e}")
 
 def recuperar_senha(email):
-    if email in usuarios:
-        return f"Sua senha é: {usuarios[email]['senha']}"
+    # Usando a função do db.py para recuperar a senha
+    resultado = recuperar_por_email(email)
+    if resultado:
+        return f"Sua senha é: {resultado[1]}"
     else:
         raise ValueError("E-mail não cadastrado.")
