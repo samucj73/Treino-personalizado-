@@ -15,6 +15,7 @@ from calculos import (
     recomendacao_gordura,
     recomendacao_carboidrato
 )
+from ia import exibir_modulo_ia  # <-- Nova importação
 
 def splash_screen():
     st.markdown("<h1 style='text-align: center;'>Personal Trainer App</h1>", unsafe_allow_html=True)
@@ -38,7 +39,6 @@ def cadastro():
                 cadastrar(nome, email, senha, idade, peso, altura, genero, "", "", 0)
                 st.success("Usuário cadastrado com sucesso!")
                 st.balloons()
-                # Define flag para redirecionar após sucesso
                 st.session_state['mostrar_cadastro'] = False
                 st.session_state['redirecionar_login'] = True
                 st.rerun()
@@ -91,7 +91,7 @@ def exibir_treino():
 
     st.title(f"Treino de {usuario['nome']}")
 
-    tabs = st.tabs(["📋 Perfil", "🏋️ Treino", "⚙️ Configurações", "📊 Análises Corporais"])
+    tabs = st.tabs(["📋 Perfil", "🏋️ Treino", "⚙️ Configurações", "📊 Análises Corporais", "🤖 Inteligência Artificial"])
 
     with tabs[0]:
         st.subheader("Informações do Usuário")
@@ -198,6 +198,10 @@ def exibir_treino():
             st.markdown(f"**Gordura Recomendada:** {gordura_recomendada:.2f} g/dia")
             st.markdown(f"**Carboidrato Recomendado:** {carboidrato:.2f} g/dia")
 
+    with tabs[4]:
+        st.subheader("Assistente de Inteligência Artificial")
+        exibir_modulo_ia()
+
 def rodape():
     st.markdown("""
         <hr style="margin-top: 50px; margin-bottom: 10px;">
@@ -206,11 +210,9 @@ def rodape():
         </div>
     """, unsafe_allow_html=True)
 
-# Execução principal
 if __name__ == "__main__":
     splash_screen()
 
-    # Lógica de redirecionamento após cadastro
     if 'redirecionar_login' in st.session_state and st.session_state['redirecionar_login']:
         del st.session_state['redirecionar_login']
         login()
