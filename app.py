@@ -201,7 +201,8 @@ def exibir_treino():
 
     with tabs[4]:
         st.subheader("Assistente de Inteligência Artificial")
-        exibir_ia()
+        elif aba == "Inteligência Artificial":
+        exibir_ia(usuario)
 
 def rodape():
     st.markdown("""
