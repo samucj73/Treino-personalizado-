@@ -10,14 +10,14 @@ def sugestao_treino_ia(usuario):
         'dias_treino': [2, 3, 4, 5, 6],
         'peso_suplemento': [40, 45, 50, 55, 60]  # Exemplo fictício de aumento de peso no supino (kg)
     })
-    
+
     X = dados_treino[['dias_treino']]
     y = dados_treino['peso_suplemento']
     modelo = LinearRegression()
     modelo.fit(X, y)
-    
+
     previsao_peso = modelo.predict(np.array([[usuario['dias_treino']]]))
-    
+
     return previsao_peso[0]
 
 # Função para ajustar o treino com base no objetivo do usuário
@@ -47,16 +47,32 @@ def exibir_ia(usuario):
     with tabs[1]:
         st.subheader("Ajuste no Treino Baseado em IA")
         st.write("A IA pode ajustar o seu treino com base no seu objetivo. Se o seu objetivo é ganhar massa muscular, ela aumenta a intensidade e o volume do treino.")
-        treino_ajustado = ajustar_treino_ia(usuario, gerar_treino_personalizado(usuario['objetivo'], usuario['experiencia'], usuario['dias_treino'], usuario['grupos_musculares']))
-        
-        for dia, exercicios in treino_ajustado.items():
-            with st.expander(dia):
-                st.markdown(f"### {dia}")
-                for ex in exercicios:
-                    st.markdown(f"**{ex['nome']}**")
-                    st.write(f"- Séries: {ex['séries']}")
-                    st.write(f"- Repetições: {ex['repetições']}")
-                    st.write(f"- Equipamento: {ex['equipamento']}")
+
+        if st.button("Ativar Inteligência Artificial para Ajustar Treino"):
+            # Verifica se os dados estão completos
+            campos_necessarios = ['objetivo', 'experiencia', 'dias_treino', 'grupos_musculares']
+            if all(campo in usuario for campo in campos_necessarios):
+                treino_gerado = gerar_treino_personalizado(
+                    usuario['objetivo'],
+                    usuario['experiencia'],
+                    usuario['dias_treino'],
+                    usuario['grupos_musculares']
+                )
+                treino_ajustado = ajustar_treino_ia(usuario, treino_gerado)
+
+                st.success("Treino ajustado com sucesso!")
+                for dia, exercicios in treino_ajustado.items():
+                    with st.expander(dia):
+                        st.markdown(f"### {dia}")
+                        for ex in exercicios:
+                            st.markdown(f"**{ex['nome']}**")
+                            st.write(f"- Séries: {ex['séries']}")
+                            st.write(f"- Repetições: {ex['repetições']}")
+                            st.write(f"- Equipamento: {ex['equipamento']}")
+            else:
+                st.error("Preencha todos os dados do treino na aba 'Treino' antes de usar a IA.")
+        else:
+            st.info("Clique no botão acima para ativar a inteligência artificial.")
 
     with tabs[2]:
         st.subheader("Análises Corporais Avançadas")
