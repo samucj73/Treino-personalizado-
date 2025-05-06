@@ -16,7 +16,6 @@ from calculos import (
     recomendacao_gordura,
     recomendacao_carboidrato
 )
-   # <-- Nova importação
 
 def splash_screen():
     st.markdown("<h1 style='text-align: center;'>Personal Trainer App</h1>", unsafe_allow_html=True)
@@ -116,34 +115,37 @@ def exibir_treino():
             else:
                 try:
                     treino = gerar_treino_personalizado(objetivo, experiencia, dias_treino, grupos_selecionados)
+                    st.session_state['treino_gerado'] = treino
+                    st.session_state['objetivo'] = objetivo
+                    st.session_state['experiencia'] = experiencia
+                    st.session_state['dias_treino'] = dias_treino
                     st.success("Treino gerado com sucesso!")
-
-                    conteudo_txt = f"Plano de Treino para {usuario['nome']}\nObjetivo: {objetivo}\nExperiência: {experiencia}\nDias por semana: {dias_treino}\n\n"
-
-                    for dia, exercicios in treino.items():
-                        with st.expander(dia):
-                            st.markdown(f"### {dia}")
-                            conteudo_txt += f"{dia}\n"
-                            for ex in exercicios:
-                                st.markdown(f"**{ex['nome']}**")
-                                st.write(f"- Séries: {ex['séries']}")
-                                st.write(f"- Repetições: {ex['repetições']}")
-                                st.write(f"- Equipamento: {ex['equipamento']}")
-                                conteudo_txt += (
-                                    f"- {ex['nome']}\n"
-                                    f"  Séries: {ex['séries']}, Repetições: {ex['repetições']}, Equipamento: {ex['equipamento']}\n"
-                                )
-                            conteudo_txt += "\n"
-
-                    st.download_button(
-                        label="📄 Baixar Plano de Treino (.txt)",
-                        data=conteudo_txt,
-                        file_name="plano_de_treino.txt",
-                        mime="text/plain"
-                    )
-
                 except Exception as e:
                     st.error(f"Erro ao gerar treino: {e}")
+
+        if 'treino_gerado' in st.session_state:
+            conteudo_txt = f"Plano de Treino para {usuario['nome']}\nObjetivo: {st.session_state['objetivo']}\nExperiência: {st.session_state['experiencia']}\nDias por semana: {st.session_state['dias_treino']}\n\n"
+            for dia, exercicios in st.session_state['treino_gerado'].items():
+                with st.expander(dia):
+                    st.markdown(f"### {dia}")
+                    conteudo_txt += f"{dia}\n"
+                    for ex in exercicios:
+                        st.markdown(f"**{ex['nome']}**")
+                        st.write(f"- Séries: {ex['séries']}")
+                        st.write(f"- Repetições: {ex['repetições']}")
+                        st.write(f"- Equipamento: {ex['equipamento']}")
+                        conteudo_txt += (
+                            f"- {ex['nome']}\n"
+                            f"  Séries: {ex['séries']}, Repetições: {ex['repetições']}, Equipamento: {ex['equipamento']}\n"
+                        )
+                conteudo_txt += "\n"
+
+            st.download_button(
+                label="📄 Baixar Plano de Treino (.txt)",
+                data=conteudo_txt,
+                file_name="plano_de_treino.txt",
+                mime="text/plain"
+            )
 
     with tabs[2]:
         st.subheader("Atualizar Dados")
@@ -160,7 +162,8 @@ def exibir_treino():
                 st.rerun()
 
         if st.button("Sair da Conta"):
-            del st.session_state['usuario']
+            for chave in ['usuario', 'treino_gerado', 'objetivo', 'experiencia', 'dias_treino']:
+                st.session_state.pop(chave, None)
             st.success("Sessão encerrada!")
             st.session_state['mostrar_cadastro'] = False
             st.rerun()
@@ -201,7 +204,6 @@ def exibir_treino():
 
     with tabs[4]:
         st.subheader("Assistente de Inteligência Artificial")
-
         exibir_ia(usuario)
 
 def rodape():
