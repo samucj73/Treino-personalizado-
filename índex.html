@@ -27,7 +27,7 @@
       background: rgba(0, 0, 0, 0.6);
       padding: 20px;
       border-radius: 12px;
-      max-width: 420px;
+      max-width: 400px;
       width: 90%;
       box-shadow: 0 8px 20px rgba(0,0,0,0.3);
     }
@@ -72,46 +72,6 @@
       text-align: center;
       background: rgba(255,255,255,0.1);
     }
-
-    /* === Barra de classificação === */
-    .barra {
-      margin-top: 20px;
-      height: 25px;
-      display: flex;
-      border-radius: 10px;
-      overflow: hidden;
-      background: #ccc;
-    }
-
-    .faixa {
-      flex-grow: 1;
-      text-align: center;
-      font-size: 12px;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .baixo { background: #7f8c8d; }
-    .atleta { background: #27ae60; }
-    .fitness { background: #2980b9; }
-    .normal { background: #f39c12; }
-    .obeso { background: #c0392b; }
-
-    .ponteiro {
-      position: relative;
-      height: 0;
-      margin-top: -10px;
-      text-align: center;
-    }
-
-    .ponteiro span {
-      position: absolute;
-      top: -10px;
-      transform: translateX(-50%);
-      font-size: 20px;
-    }
   </style>
 </head>
 <body>
@@ -141,16 +101,6 @@
     <button onclick="calcularBF()">Calcular BF%</button>
 
     <div class="resultado" id="resultado"></div>
-
-    <!-- Barra de classificação -->
-    <div class="barra" id="barra">
-      <div class="faixa baixo">↓</div>
-      <div class="faixa atleta">Atleta</div>
-      <div class="faixa fitness">Fitness</div>
-      <div class="faixa normal">Normal</div>
-      <div class="faixa obeso">Obesidade</div>
-    </div>
-    <div class="ponteiro"><span id="seta">⬆️</span></div>
   </div>
 
   <script>
@@ -176,26 +126,23 @@
       bf = Math.round(bf * 100) / 100;
 
       let interpretacao = "";
-      let posicao = 0; // porcentagem para posição da seta na barra
 
       if (sexo === "M") {
-        if (bf < 6) { interpretacao = `Abaixo do saudável (<6%)`; posicao = 5; }
-        else if (bf <= 13) { interpretacao = `Atleta (6% a 13%)`; posicao = 20; }
-        else if (bf <= 17) { interpretacao = `Fitness (14% a 17%)`; posicao = 40; }
-        else if (bf <= 24) { interpretacao = `Normal (18% a 24%)`; posicao = 65; }
-        else { interpretacao = `Obesidade (≥25%)`; posicao = 90; }
+        if (bf < 6) interpretacao = `Abaixo do saudável (<6%)`;
+        else if (bf <= 13) interpretacao = `Atleta (6% a 13%)`;
+        else if (bf <= 17) interpretacao = `Fitness (14% a 17%)`;
+        else if (bf <= 24) interpretacao = `Normal (18% a 24%)`;
+        else interpretacao = `Obesidade (≥25%)`;
       } else {
-        if (bf < 14) { interpretacao = `Abaixo do saudável (<14%)`; posicao = 5; }
-        else if (bf <= 20) { interpretacao = `Atleta (14% a 20%)`; posicao = 20; }
-        else if (bf <= 24) { interpretacao = `Fitness (21% a 24%)`; posicao = 40; }
-        else if (bf <= 31) { interpretacao = `Normal (25% a 31%)`; posicao = 65; }
-        else { interpretacao = `Obesidade (≥32%)`; posicao = 90; }
+        if (bf < 14) interpretacao = `Abaixo do saudável (<14%)`;
+        else if (bf <= 20) interpretacao = `Atleta (14% a 20%)`;
+        else if (bf <= 24) interpretacao = `Fitness (21% a 24%)`;
+        else if (bf <= 31) interpretacao = `Normal (25% a 31%)`;
+        else interpretacao = `Obesidade (≥32%)`;
       }
 
       document.getElementById("resultado").innerHTML =
         `<b>Seu percentual de gordura corporal é:</b> ${bf}% <br><br> <b>Classificação:</b> ${interpretacao}`;
-
-      document.getElementById("seta").style.left = posicao + "%";
     }
   </script>
 
